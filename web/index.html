@@ -1,27 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ScamGuard AI — Selective Mobile Scam Detection System</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+    }
+  </script>
   <link rel="stylesheet" href="/static/styles.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 antialiased min-h-screen flex flex-col transition-colors duration-200">
 
   <!-- Top Navigation Header -->
-  <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+  <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50 shadow-sm transition-colors duration-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-blue-500 flex items-center justify-center text-white font-bold text-xl shadow-md shadow-indigo-100">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-blue-500 flex items-center justify-center text-white font-bold text-xl shadow-md shadow-indigo-500/20">
           🛡️
         </div>
         <div>
-          <h1 class="text-lg font-bold text-slate-900 leading-tight">ScamGuard <span class="text-indigo-600">AI</span></h1>
-          <p class="text-xs text-slate-500 font-medium">Selective Mobile Scam Detection • Bachelor's Thesis</p>
+          <h1 class="text-lg font-bold text-slate-900 dark:text-white leading-tight">ScamGuard <span class="text-indigo-600 dark:text-indigo-400">AI</span></h1>
+          <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Selective Mobile Scam Detection • Bachelor's Thesis</p>
         </div>
       </div>
 
@@ -33,8 +38,19 @@
         <button id="nav-privacy" class="nav-btn" onclick="switchTab('privacy')">Privacy & Architecture</button>
       </nav>
 
-      <div class="flex items-center space-x-3">
-        <div id="api-status-badge" class="flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+      <div class="flex items-center space-x-2.5">
+        <!-- Dark/Light Mode Toggle -->
+        <button
+          id="theme-toggle"
+          onclick="toggleTheme()"
+          title="Toggle Dark/Light Mode"
+          class="p-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-semibold flex items-center gap-1.5 transition-all"
+        >
+          <span id="theme-icon">☀️</span>
+          <span id="theme-text" class="hidden sm:inline">Light</span>
+        </button>
+
+        <div id="api-status-badge" class="flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
           <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
           <span id="api-status-text">Backend Connected</span>
         </div>
@@ -43,7 +59,7 @@
   </header>
 
   <!-- Mobile Navigation Bar -->
-  <div class="md:hidden flex border-b border-slate-200 bg-white overflow-x-auto px-4 py-2 space-x-2">
+  <div class="md:hidden flex border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-x-auto px-4 py-2 space-x-2">
     <button class="nav-btn text-xs active" onclick="switchTab('detector')">Detector</button>
     <button class="nav-btn text-xs" onclick="switchTab('benchmark')">Benchmark</button>
     <button class="nav-btn text-xs" onclick="switchTab('batch')">Batch Test</button>
@@ -58,18 +74,18 @@
     <section id="tab-detector" class="tab-content active space-y-8">
       
       <!-- Quick Info Banner -->
-      <div class="bg-indigo-50/70 border border-indigo-100 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div class="bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/60 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div class="flex items-start space-x-3">
           <div class="text-2xl mt-0.5">💡</div>
           <div>
-            <h3 class="text-sm font-semibold text-indigo-950">Event-Driven Two-Stage Detection Workflow</h3>
-            <p class="text-xs text-indigo-800/80 mt-0.5">
+            <h3 class="text-sm font-semibold text-indigo-950 dark:text-indigo-200">Event-Driven Two-Stage Detection Workflow</h3>
+            <p class="text-xs text-indigo-800/80 dark:text-indigo-300/80 mt-0.5">
               Stage 1 operates on-device to filter out obvious benign chats. Stage 2 executes hybrid ML + rule verification on candidate messages, reducing backend server load by ~90%.
             </p>
           </div>
         </div>
         <div class="flex items-center gap-2 self-end sm:self-auto text-xs">
-          <span class="text-slate-500">Quick Test Cases:</span>
+          <span class="text-slate-500 dark:text-slate-400">Quick Test Cases:</span>
           <button onclick="loadSample('phishing')" class="chip-btn">Bank Phishing</button>
           <button onclick="loadSample('otp')" class="chip-btn">OTP Stealer</button>
           <button onclick="loadSample('lottery')" class="chip-btn">Lottery Lure</button>
@@ -82,12 +98,12 @@
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
         <!-- Left: Input Card -->
-        <div class="lg:col-span-6 bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-5">
+        <div class="lg:col-span-6 bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 space-y-5">
           <div class="flex items-center justify-between">
-            <h2 class="text-base font-bold text-slate-900 flex items-center gap-2">
+            <h2 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
               <span>✉️</span> Message Input
             </h2>
-            <span id="char-counter" class="text-xs text-slate-400 font-mono">0 / 4000</span>
+            <span id="char-counter" class="text-xs text-slate-400 dark:text-slate-500 font-mono">0 / 4000</span>
           </div>
 
           <div class="relative">
@@ -95,35 +111,35 @@
               id="message-input"
               rows="7"
               placeholder="Paste or type suspicious message here (e.g. SMS alert, WhatsApp forward, parcel tracking, email excerpt)..."
-              class="w-full px-4 py-3 text-sm text-slate-800 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all font-sans"
+              class="w-full px-4 py-3 text-sm text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all font-sans placeholder-slate-400 dark:placeholder-slate-600"
               oninput="updateCharCount()"
             ></textarea>
           </div>
 
           <!-- Controls & Toggles -->
-          <div class="space-y-3 pt-1 border-t border-slate-100">
+          <div class="space-y-3 pt-1 border-t border-slate-100 dark:border-slate-800">
             <div class="flex items-center justify-between">
               <div>
-                <label class="text-xs font-semibold text-slate-800 cursor-pointer" for="toggle-pii">Redact PII Locally</label>
-                <p class="text-[11px] text-slate-500">Mask phone numbers, card numbers, and emails before server analysis</p>
+                <label class="text-xs font-semibold text-slate-800 dark:text-slate-200 cursor-pointer" for="toggle-pii">Redact PII Locally</label>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400">Mask phone numbers, card numbers, and emails before server analysis</p>
               </div>
               <input type="checkbox" id="toggle-pii" class="toggle-checkbox" checked>
             </div>
 
             <div class="flex items-center justify-between">
               <div>
-                <label class="text-xs font-semibold text-slate-800 cursor-pointer" for="toggle-prefilter">Stage 1 Event Prefilter</label>
-                <p class="text-[11px] text-slate-500">Filter obvious benign conversational text on-device to reduce traffic</p>
+                <label class="text-xs font-semibold text-slate-800 dark:text-slate-200 cursor-pointer" for="toggle-prefilter">Stage 1 Event Prefilter</label>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400">Filter obvious benign conversational text on-device to reduce traffic</p>
               </div>
               <input type="checkbox" id="toggle-prefilter" class="toggle-checkbox" checked>
             </div>
 
             <div class="flex items-center justify-between">
               <div>
-                <label class="text-xs font-semibold text-slate-800">Source Channel</label>
-                <p class="text-[11px] text-slate-500">Simulate origin of message event</p>
+                <label class="text-xs font-semibold text-slate-800 dark:text-slate-200">Source Channel</label>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400">Simulate origin of message event</p>
               </div>
-              <select id="source-select" class="text-xs bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-indigo-500 font-medium text-slate-700">
+              <select id="source-select" class="text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-indigo-500 font-medium text-slate-700 dark:text-slate-200">
                 <option value="MANUAL">Manual Input / Web Paste</option>
                 <option value="NOTIFICATION">Android Notification Preview</option>
                 <option value="SHARE_SHEET">System Share Sheet (ACTION_SEND)</option>
@@ -136,14 +152,14 @@
             <button
               id="analyze-btn"
               onclick="analyzeMessage()"
-              class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm py-3 px-4 rounded-xl shadow-md shadow-indigo-100 flex items-center justify-center gap-2 transition-all active:scale-[0.99]"
+              class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm py-3 px-4 rounded-xl shadow-md shadow-indigo-500/20 flex items-center justify-center gap-2 transition-all active:scale-[0.99]"
             >
               <span id="btn-spinner" class="hidden spinner"></span>
               <span id="btn-text">Inspect for Scam Indicators</span>
             </button>
             <button
               onclick="clearInput()"
-              class="px-4 py-3 text-sm font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition-all"
+              class="px-4 py-3 text-sm font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-all"
             >
               Clear
             </button>
@@ -152,17 +168,17 @@
 
         <!-- Right: Results Card -->
         <div class="lg:col-span-6 space-y-6">
-          <div id="results-empty" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-12 text-center space-y-3">
-            <div class="w-16 h-16 mx-auto rounded-full bg-slate-100 flex items-center justify-center text-3xl">
+          <div id="results-empty" class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 p-12 text-center space-y-3">
+            <div class="w-16 h-16 mx-auto rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-3xl">
               🔍
             </div>
-            <h3 class="text-base font-semibold text-slate-800">No Analysis Yet</h3>
-            <p class="text-xs text-slate-500 max-w-sm mx-auto">
+            <h3 class="text-base font-semibold text-slate-800 dark:text-slate-200">No Analysis Yet</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
               Paste a message or select a test preset on the left and click "Inspect for Scam Indicators" to view the 4-tier risk classification, calibrated confidence, and threat vectors.
             </p>
           </div>
 
-          <div id="results-card" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-6">
+          <div id="results-card" class="hidden bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 space-y-6">
             
             <!-- Result Header Banner -->
             <div id="result-tier-banner" class="p-4 rounded-xl border flex items-center justify-between">
@@ -171,7 +187,7 @@
                 <div>
                   <div class="flex items-center gap-2">
                     <span id="result-tier-title" class="text-base font-bold">Likely Safe</span>
-                    <span id="result-stage-badge" class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-white/70 border"></span>
+                    <span id="result-stage-badge" class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-white/70 dark:bg-slate-800/80 border dark:border-slate-700"></span>
                   </div>
                   <p id="result-tier-subtitle" class="text-xs opacity-90 mt-0.5">Calibrated hybrid risk assessment</p>
                 </div>
@@ -183,14 +199,14 @@
             </div>
 
             <!-- Redacted Text Preview (if applicable) -->
-            <div id="redacted-preview-box" class="hidden bg-amber-50/70 border border-amber-200/60 rounded-xl p-3 text-xs text-amber-900">
+            <div id="redacted-preview-box" class="hidden bg-amber-50/70 dark:bg-amber-950/40 border border-amber-200/60 dark:border-amber-800/60 rounded-xl p-3 text-xs text-amber-900 dark:text-amber-200">
               <span class="font-semibold block mb-0.5">🔒 Privacy Redaction Applied:</span>
-              <span id="redacted-preview-text" class="font-mono text-[11px] text-amber-800"></span>
+              <span id="redacted-preview-text" class="font-mono text-[11px] text-amber-800 dark:text-amber-300"></span>
             </div>
 
             <!-- Risk Indicators Detected -->
             <div class="space-y-3">
-              <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center justify-between">
+              <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center justify-between">
                 <span>Threat Vectors & Matched Signals</span>
                 <span id="indicator-count-badge" class="badge-neutral text-[10px]">0 detected</span>
               </h4>
@@ -200,38 +216,38 @@
             </div>
 
             <!-- Technical Breakdown -->
-            <div class="bg-slate-50 rounded-xl p-4 border border-slate-200/80 space-y-2 text-xs">
-              <div class="font-bold text-slate-700 flex justify-between">
+            <div class="bg-slate-50 dark:bg-slate-950/80 rounded-xl p-4 border border-slate-200/80 dark:border-slate-800 space-y-2 text-xs">
+              <div class="font-bold text-slate-700 dark:text-slate-300 flex justify-between">
                 <span>Analytical Engine Breakdown</span>
-                <span id="result-latency" class="font-mono text-slate-400 text-[11px]">4.2 ms</span>
+                <span id="result-latency" class="font-mono text-slate-400 dark:text-slate-500 text-[11px]">4.2 ms</span>
               </div>
               <div class="grid grid-cols-2 gap-3 pt-1">
                 <div>
-                  <span class="text-slate-500 block text-[11px]">ML Statistical Probability:</span>
-                  <span id="breakdown-ml-prob" class="font-mono font-semibold text-slate-800 text-xs">0.00%</span>
+                  <span class="text-slate-500 dark:text-slate-400 block text-[11px]">ML Statistical Probability:</span>
+                  <span id="breakdown-ml-prob" class="font-mono font-semibold text-slate-800 dark:text-slate-200 text-xs">0.00%</span>
                 </div>
                 <div>
-                  <span class="text-slate-500 block text-[11px]">Rule Heuristic Score:</span>
-                  <span id="breakdown-rule-score" class="font-mono font-semibold text-slate-800 text-xs">0 / 100</span>
+                  <span class="text-slate-500 dark:text-slate-400 block text-[11px]">Rule Heuristic Score:</span>
+                  <span id="breakdown-rule-score" class="font-mono font-semibold text-slate-800 dark:text-slate-200 text-xs">0 / 100</span>
                 </div>
               </div>
             </div>
 
             <!-- Actionable Recommendations -->
             <div class="space-y-2">
-              <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500">Suggested Action</h4>
-              <ul id="recommendations-list" class="space-y-1.5 text-xs text-slate-700">
+              <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Suggested Action</h4>
+              <ul id="recommendations-list" class="space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
                 <!-- Dynamically injected -->
               </ul>
             </div>
 
             <!-- User Feedback Section -->
-            <div class="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-              <span class="text-xs text-slate-500 font-medium">Was this result accurate?</span>
+            <div class="pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">Was this result accurate?</span>
               <div class="flex items-center gap-2">
-                <button onclick="sendFeedback('safe')" class="feedback-btn hover:text-emerald-600">👍 Legitimate</button>
-                <button onclick="sendFeedback('scam')" class="feedback-btn hover:text-rose-600">⚠️ True Scam</button>
-                <button onclick="sendFeedback('ambiguous')" class="feedback-btn hover:text-amber-600">❓ Ambiguous</button>
+                <button onclick="sendFeedback('safe')" class="feedback-btn hover:text-emerald-600 dark:hover:text-emerald-400">👍 Legitimate</button>
+                <button onclick="sendFeedback('scam')" class="feedback-btn hover:text-rose-600 dark:hover:text-rose-400">⚠️ True Scam</button>
+                <button onclick="sendFeedback('ambiguous')" class="feedback-btn hover:text-amber-600 dark:hover:text-amber-400">❓ Ambiguous</button>
               </div>
             </div>
 
@@ -245,45 +261,45 @@
     <!-- TAB 2: RESEARCH BENCHMARK -->
     <section id="tab-benchmark" class="tab-content space-y-8">
       <div>
-        <h2 class="text-xl font-bold text-slate-900">Empirical Thesis Evaluation Benchmark</h2>
-        <p class="text-xs text-slate-500 mt-1">
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white">Empirical Thesis Evaluation Benchmark</h2>
+        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
           Comparative analysis on 1,115 held-out messages from the genuine UCI Machine Learning Repository SMS Spam Collection corpus.
         </p>
       </div>
 
       <!-- Summary KPI Cards -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-          <span class="text-xs text-slate-500 font-medium block">Stage 1 Traffic Reduction</span>
-          <div class="text-3xl font-black text-indigo-600 font-mono mt-1" id="kpi-traffic-reduction">89.96%</div>
-          <span class="text-[11px] text-slate-400 mt-1 block">112 server calls vs 1,115 unconstrained</span>
+        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+          <span class="text-xs text-slate-500 dark:text-slate-400 font-medium block">Stage 1 Traffic Reduction</span>
+          <div class="text-3xl font-black text-indigo-600 dark:text-indigo-400 font-mono mt-1" id="kpi-traffic-reduction">89.96%</div>
+          <span class="text-[11px] text-slate-400 dark:text-slate-500 mt-1 block">112 server calls vs 1,115 unconstrained</span>
         </div>
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-          <span class="text-xs text-slate-500 font-medium block">Hybrid Cloud Accuracy</span>
-          <div class="text-3xl font-black text-emerald-600 font-mono mt-1" id="kpi-accuracy">99.19%</div>
-          <span class="text-[11px] text-slate-400 mt-1 block">Precision: 99.30% • Recall: 94.63%</span>
+        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+          <span class="text-xs text-slate-500 dark:text-slate-400 font-medium block">Hybrid Cloud Accuracy</span>
+          <div class="text-3xl font-black text-emerald-600 dark:text-emerald-400 font-mono mt-1" id="kpi-accuracy">99.19%</div>
+          <span class="text-[11px] text-slate-400 dark:text-slate-500 mt-1 block">Precision: 99.30% • Recall: 94.63%</span>
         </div>
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-          <span class="text-xs text-slate-500 font-medium block">False Positive Rate</span>
-          <div class="text-3xl font-black text-blue-600 font-mono mt-1" id="kpi-fpr">0.10%</div>
-          <span class="text-[11px] text-slate-400 mt-1 block">Only 1 benign chat misclassified as scam</span>
+        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+          <span class="text-xs text-slate-500 dark:text-slate-400 font-medium block">False Positive Rate</span>
+          <div class="text-3xl font-black text-blue-600 dark:text-blue-400 font-mono mt-1" id="kpi-fpr">0.10%</div>
+          <span class="text-[11px] text-slate-400 dark:text-slate-500 mt-1 block">Only 1 benign chat misclassified as scam</span>
         </div>
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-          <span class="text-xs text-slate-500 font-medium block">On-Device Edge Latency</span>
-          <div class="text-3xl font-black text-violet-600 font-mono mt-1" id="kpi-latency">0.52 ms</div>
-          <span class="text-[11px] text-slate-400 mt-1 block">Negligible CPU and battery impact</span>
+        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+          <span class="text-xs text-slate-500 dark:text-slate-400 font-medium block">On-Device Edge Latency</span>
+          <div class="text-3xl font-black text-violet-600 dark:text-violet-400 font-mono mt-1" id="kpi-latency">0.52 ms</div>
+          <span class="text-[11px] text-slate-400 dark:text-slate-500 mt-1 block">Negligible CPU and battery impact</span>
         </div>
       </div>
 
       <!-- Comparative Table -->
-      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
-          <h3 class="text-sm font-bold text-slate-900">Architecture Performance Comparison (Test Split n=1,115)</h3>
-          <span class="text-xs text-slate-400">Random Seed: 42 (Reproducible)</span>
+      <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+          <h3 class="text-sm font-bold text-slate-900 dark:text-white">Architecture Performance Comparison (Test Split n=1,115)</h3>
+          <span class="text-xs text-slate-400 dark:text-slate-500">Random Seed: 42 (Reproducible)</span>
         </div>
         <div class="overflow-x-auto">
           <table class="w-full text-left text-xs">
-            <thead class="bg-slate-50 text-slate-500 uppercase font-semibold border-b border-slate-200">
+            <thead class="bg-slate-50 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 uppercase font-semibold border-b border-slate-200 dark:border-slate-800">
               <tr>
                 <th class="px-5 py-3">Architecture / Model</th>
                 <th class="px-4 py-3 text-center">Accuracy</th>
@@ -296,7 +312,7 @@
                 <th class="px-4 py-3 text-center">Traffic Saved</th>
               </tr>
             </thead>
-            <tbody id="benchmark-table-body" class="divide-y divide-slate-100">
+            <tbody id="benchmark-table-body" class="divide-y divide-slate-100 dark:divide-slate-800">
               <!-- Dynamically populated -->
             </tbody>
           </table>
@@ -305,23 +321,23 @@
 
       <!-- Key Academic Insights -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
-          <h4 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+        <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+          <h4 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
             <span>⚖️</span> Trade-off & False Negative Disclosure
           </h4>
-          <p class="text-xs text-slate-600 leading-relaxed">
+          <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
             As mandated by rigorous thesis evaluation, local edge prefiltering introduces a measured trade-off. While reducing cloud traffic by <strong>89.96%</strong>, subtle conversational spam lacking links, urgency, or monetary tokens increases False Negative Rate to 40.94% if background notifications rely purely on heuristics.
           </p>
-          <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-[11px] text-slate-600">
+          <div class="p-3 bg-slate-50 dark:bg-slate-950/70 rounded-xl border border-slate-200 dark:border-slate-800 text-[11px] text-slate-600 dark:text-slate-400">
             <strong>System Safeguard:</strong> User-initiated actions (Share-to-App and Manual Paste) bypass the local prefilter completely and route straight to the 99.19% accurate hybrid cloud engine.
           </div>
         </div>
 
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
-          <h4 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+        <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+          <h4 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
             <span>🔬</span> Dataset Provenance & Academic Validation
           </h4>
-          <ul class="text-xs text-slate-600 space-y-2">
+          <ul class="text-xs text-slate-600 dark:text-slate-300 space-y-2">
             <li><strong>Corpus:</strong> SMS Spam Collection v.1 (UCI ML Repository)</li>
             <li><strong>Authors:</strong> Tiago A. Almeida, Jose Maria Gomez Hidalgo, Akebo Yamakami (ACM DocEng'11).</li>
             <li><strong>Volume:</strong> 5,574 authentic mobile messages (4,827 ham, 747 spam).</li>
@@ -335,22 +351,22 @@
     <!-- TAB 3: BATCH EVALUATOR -->
     <section id="tab-batch" class="tab-content space-y-6">
       <div>
-        <h2 class="text-xl font-bold text-slate-900">Interactive Batch Traffic Reduction Evaluator</h2>
-        <p class="text-xs text-slate-500 mt-1">
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white">Interactive Batch Traffic Reduction Evaluator</h2>
+        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
           Paste multiple messages (one per line) to simulate live incoming mobile notifications and measure real-time server traffic reduction.
         </p>
       </div>
 
-      <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+      <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
         <div class="flex items-center justify-between">
-          <label class="text-xs font-bold text-slate-700">Batch Message Feed (One message per line)</label>
-          <button onclick="loadBatchPreset()" class="text-xs text-indigo-600 hover:text-indigo-800 font-semibold">Load Sample Batch (10 Messages)</button>
+          <label class="text-xs font-bold text-slate-700 dark:text-slate-300">Batch Message Feed (One message per line)</label>
+          <button onclick="loadBatchPreset()" class="text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-semibold">Load Sample Batch (10 Messages)</button>
         </div>
         <textarea
           id="batch-input"
           rows="8"
           placeholder="Enter multiple messages here, separated by newlines..."
-          class="w-full px-4 py-3 text-xs font-mono text-slate-800 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+          class="w-full px-4 py-3 text-xs font-mono text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
         ></textarea>
         <button
           onclick="runBatchEvaluation()"
@@ -369,23 +385,23 @@
     <section id="tab-history" class="tab-content space-y-6">
       <div class="flex items-center justify-between">
         <div>
-          <h2 class="text-xl font-bold text-slate-900">Detection Audit History</h2>
-          <p class="text-xs text-slate-500 mt-1">
+          <h2 class="text-xl font-bold text-slate-900 dark:text-white">Detection Audit History</h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
             Ephemeral detection metadata recorded for this client session. Zero raw text bodies are persisted.
           </p>
         </div>
         <button
           onclick="clearAuditHistory()"
-          class="text-xs font-semibold px-3 py-2 bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 rounded-xl transition-all"
+          class="text-xs font-semibold px-3 py-2 bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 hover:bg-rose-100 dark:hover:bg-rose-900/60 border border-rose-200 dark:border-rose-800 rounded-xl transition-all"
         >
           🗑️ Clear Session History
         </button>
       </div>
 
-      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
         <div class="overflow-x-auto">
           <table class="w-full text-left text-xs">
-            <thead class="bg-slate-50 text-slate-500 uppercase font-semibold border-b border-slate-200">
+            <thead class="bg-slate-50 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 uppercase font-semibold border-b border-slate-200 dark:border-slate-800">
               <tr>
                 <th class="px-5 py-3">Timestamp (UTC)</th>
                 <th class="px-4 py-3">Source Channel</th>
@@ -395,7 +411,7 @@
                 <th class="px-4 py-3">Request ID</th>
               </tr>
             </thead>
-            <tbody id="history-table-body" class="divide-y divide-slate-100">
+            <tbody id="history-table-body" class="divide-y divide-slate-100 dark:divide-slate-800">
               <!-- Populated via app.js -->
             </tbody>
           </table>
@@ -406,65 +422,65 @@
     <!-- TAB 5: PRIVACY & ARCHITECTURE -->
     <section id="tab-privacy" class="tab-content space-y-6">
       <div>
-        <h2 class="text-xl font-bold text-slate-900">Privacy Architecture & Android Constraints</h2>
-        <p class="text-xs text-slate-500 mt-1">
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white">Privacy Architecture & Android Constraints</h2>
+        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
           Technical design principles addressing mobile operating system limitations and data minimization.
         </p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+        <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
           <div class="text-2xl">🔒</div>
-          <h3 class="text-sm font-bold text-slate-900">Zero Raw Retention</h3>
-          <p class="text-xs text-slate-600 leading-relaxed">
+          <h3 class="text-sm font-bold text-slate-900 dark:text-white">Zero Raw Retention</h3>
+          <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
             Incoming message text is processed in-memory during inference and immediately discarded. Only anonymized SHA-256 session tokens, numerical risk scores, and timestamps are recorded in the audit log.
           </p>
         </div>
 
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+        <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
           <div class="text-2xl">📱</div>
-          <h3 class="text-sm font-bold text-slate-900">Android Sandboxing</h3>
-          <p class="text-xs text-slate-600 leading-relaxed">
+          <h3 class="text-sm font-bold text-slate-900 dark:text-white">Android Sandboxing</h3>
+          <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
             Android security strictly prevents third-party apps from accessing WhatsApp or Gmail databases. ScamGuard utilizes the officially documented <code>NotificationListenerService</code>, processing only what is visible in the status bar preview.
           </p>
         </div>
 
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+        <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
           <div class="text-2xl">⚙️</div>
-          <h3 class="text-sm font-bold text-slate-900">Two-Stage Efficiency</h3>
-          <p class="text-xs text-slate-600 leading-relaxed">
+          <h3 class="text-sm font-bold text-slate-900 dark:text-white">Two-Stage Efficiency</h3>
+          <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
             Instead of congesting cellular data networks by streaming every interpersonal chat, the Stage 1 local filter executes in <strong>0.5ms</strong>, routing candidates to Stage 2 only when threat triggers are found.
           </p>
         </div>
       </div>
 
       <!-- Settings Panel -->
-      <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-        <h3 class="text-sm font-bold text-slate-900">Client Settings & API Connection</h3>
+      <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+        <h3 class="text-sm font-bold text-slate-900 dark:text-white">Client Settings & API Connection</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
           <div>
-            <label class="block font-semibold text-slate-700 mb-1">Backend API Base URL</label>
+            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Backend API Base URL</label>
             <input
               type="text"
               id="api-base-url-input"
               value=""
               placeholder="e.g. http://localhost:8000/api/v1 (leave empty for auto-detect)"
-              class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-800 font-mono text-xs focus:bg-white"
+              class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-800 dark:text-slate-100 font-mono text-xs focus:bg-white dark:focus:bg-slate-900"
             >
           </div>
           <div>
-            <label class="block font-semibold text-slate-700 mb-1">Session ID Token</label>
+            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Session ID Token</label>
             <input
               type="text"
               id="session-id-display"
               readonly
-              class="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-slate-500 font-mono text-xs cursor-not-allowed"
+              class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-500 dark:text-slate-400 font-mono text-xs cursor-not-allowed"
             >
           </div>
         </div>
         <button
           onclick="saveSettings()"
-          class="text-xs font-semibold px-4 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-all"
+          class="text-xs font-semibold px-4 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-all shadow-md shadow-indigo-500/20"
         >
           Save Configuration
         </button>
@@ -475,7 +491,7 @@
   </main>
 
   <!-- Footer -->
-  <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-400">
+  <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-6 text-center text-xs text-slate-400 dark:text-slate-500 transition-colors duration-200">
     <div class="max-w-7xl mx-auto px-4">
       ScamGuard AI — Bachelor's Thesis Engineering Project • Privacy-Conscious Mobile Scam Detection System
     </div>

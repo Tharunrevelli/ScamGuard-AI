@@ -34,11 +34,39 @@ const BATCH_PRESET = [
 
 // Initialize on DOM load
 document.addEventListener("DOMContentLoaded", () => {
+  initTheme();
   initSessionDisplay();
   checkApiHealth();
   loadBenchmarkData();
   loadAuditHistory();
 });
+
+// Dark / Light Theme Manager
+function initTheme() {
+  const savedTheme = localStorage.getItem("scamguard_theme") || "dark"; // Default to Dark Mode!
+  applyTheme(savedTheme);
+}
+
+function toggleTheme() {
+  const isDark = document.documentElement.classList.contains("dark");
+  const newTheme = isDark ? "light" : "dark";
+  applyTheme(newTheme);
+  localStorage.setItem("scamguard_theme", newTheme);
+}
+
+function applyTheme(theme) {
+  const icon = document.getElementById("theme-icon");
+  const text = document.getElementById("theme-text");
+  if (theme === "dark") {
+    document.documentElement.classList.add("dark");
+    if (icon) icon.textContent = "☀️";
+    if (text) text.textContent = "Light";
+  } else {
+    document.documentElement.classList.remove("dark");
+    if (icon) icon.textContent = "🌙";
+    if (text) text.textContent = "Dark";
+  }
+}
 
 function getOrCreateSessionId() {
   let sid = localStorage.getItem("scamguard_session_id");
@@ -421,27 +449,27 @@ async function runBatchEvaluation() {
     const data = await res.json();
 
     container.innerHTML = `
-      <div class="bg-indigo-50 border border-indigo-100 rounded-2xl p-5 grid grid-cols-1 sm:grid-cols-4 gap-4 text-center">
+      <div class="bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/60 rounded-2xl p-5 grid grid-cols-1 sm:grid-cols-4 gap-4 text-center">
         <div>
-          <span class="text-xs text-indigo-900 block font-medium">Total Messages</span>
-          <span class="text-2xl font-black text-indigo-950 font-mono">${data.total_messages}</span>
+          <span class="text-xs text-indigo-900 dark:text-indigo-300 block font-medium">Total Messages</span>
+          <span class="text-2xl font-black text-indigo-950 dark:text-indigo-100 font-mono">${data.total_messages}</span>
         </div>
         <div>
-          <span class="text-xs text-emerald-900 block font-medium">Filtered Locally (Edge)</span>
-          <span class="text-2xl font-black text-emerald-600 font-mono">${data.filtered_locally}</span>
+          <span class="text-xs text-emerald-900 dark:text-emerald-300 block font-medium">Filtered Locally (Edge)</span>
+          <span class="text-2xl font-black text-emerald-600 dark:text-emerald-400 font-mono">${data.filtered_locally}</span>
         </div>
         <div>
-          <span class="text-xs text-amber-900 block font-medium">Routed to Backend</span>
-          <span class="text-2xl font-black text-amber-600 font-mono">${data.routed_to_backend}</span>
+          <span class="text-xs text-amber-900 dark:text-amber-300 block font-medium">Routed to Backend</span>
+          <span class="text-2xl font-black text-amber-600 dark:text-amber-400 font-mono">${data.routed_to_backend}</span>
         </div>
         <div>
-          <span class="text-xs text-indigo-900 block font-medium">Server Traffic Saved</span>
-          <span class="text-2xl font-black text-indigo-600 font-mono">${data.request_reduction_pct}%</span>
+          <span class="text-xs text-indigo-900 dark:text-indigo-300 block font-medium">Server Traffic Saved</span>
+          <span class="text-2xl font-black text-indigo-600 dark:text-indigo-400 font-mono">${data.request_reduction_pct}%</span>
         </div>
       </div>
-      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 overflow-x-auto">
+      <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-4 overflow-x-auto">
         <table class="w-full text-left text-xs">
-          <thead class="bg-slate-50 text-slate-500 uppercase font-semibold">
+          <thead class="bg-slate-50 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 uppercase font-semibold">
             <tr>
               <th class="px-4 py-2">Message Snippet</th>
               <th class="px-4 py-2">Routing</th>
@@ -450,14 +478,14 @@ async function runBatchEvaluation() {
               <th class="px-4 py-2">Latency</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-slate-100 font-mono text-[11px]">
+          <tbody class="divide-y divide-slate-100 dark:divide-slate-800 font-mono text-[11px]">
             ${data.results.map(r => `
               <tr>
-                <td class="px-4 py-2 text-slate-700 font-sans text-xs">${r.text_snippet}</td>
-                <td class="px-4 py-2 font-semibold ${r.prefilter_routed ? 'text-amber-600' : 'text-emerald-600'}">${r.prefilter_routed ? 'Routed to Cloud' : 'Filtered on Device'}</td>
-                <td class="px-4 py-2">${r.classification}</td>
-                <td class="px-4 py-2">${r.risk_score.toFixed(0)}</td>
-                <td class="px-4 py-2 text-slate-400">${r.processing_time_ms.toFixed(1)} ms</td>
+                <td class="px-4 py-2 text-slate-700 dark:text-slate-200 font-sans text-xs">${r.text_snippet}</td>
+                <td class="px-4 py-2 font-semibold ${r.prefilter_routed ? 'text-amber-600 dark:text-amber-400' : 'text-emerald-600 dark:text-emerald-400'}">${r.prefilter_routed ? 'Routed to Cloud' : 'Filtered on Device'}</td>
+                <td class="px-4 py-2 text-slate-800 dark:text-slate-200">${r.classification}</td>
+                <td class="px-4 py-2 text-slate-800 dark:text-slate-200">${r.risk_score.toFixed(0)}</td>
+                <td class="px-4 py-2 text-slate-400 dark:text-slate-500">${r.processing_time_ms.toFixed(1)} ms</td>
               </tr>
             `).join("")}
           </tbody>
