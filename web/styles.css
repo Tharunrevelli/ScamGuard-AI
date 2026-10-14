@@ -1,8 +1,4 @@
-/* Modern Styling for ScamGuard AI */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
+/* Modern Custom Enhancements for ScamGuard AI */
 :root {
   --primary: #4f46e5;
   --primary-hover: #4338ca;
