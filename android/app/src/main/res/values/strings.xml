@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">ScamGuard</string>
+    <string name="title_home">Scam Detection Scanner</string>
+    <string name="prompt_input">Paste message or shared notification...</string>
+    <string name="action_analyze">Inspect for Scam Indicators</string>
+    <string name="action_clear">Clear</string>
+    <string name="privacy_redact_label">Redact PII Locally</string>
+    <string name="prefilter_label">Stage 1 Event Prefilter</string>
+    <string name="notification_monitoring_label">Background Notification Monitor</string>
+    <string name="authorize_notifications">Grant Notification Access</string>
+    <string name="clear_history">Clear Local History</string>
+</resources>

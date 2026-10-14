@@ -1,0 +1,24 @@
+{
+  "model_name": "TFIDF_CalibratedLogisticRegression",
+  "dataset_name": "SMS Spam Collection v.1 (UCI ML Repository)",
+  "train_samples": 4459,
+  "test_samples": 1115,
+  "total_samples": 5574,
+  "class_distribution": {
+    "ham": 4827,
+    "spam": 747
+  },
+  "accuracy": 0.9892,
+  "precision": 0.9724,
+  "recall": 0.9463,
+  "f1_score": 0.9592,
+  "roc_auc": 0.9925,
+  "confusion_matrix": {
+    "true_negatives": 962,
+    "false_positives": 4,
+    "false_negatives": 8,
+    "true_positives": 141
+  },
+  "false_positive_rate": 0.0041,
+  "false_negative_rate": 0.0537
+}

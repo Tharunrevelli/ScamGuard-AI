@@ -1,0 +1,44 @@
+[
+  {
+    "id": "DEMO-01",
+    "category": "BANK_PHISHING",
+    "expected_classification": "Likely Scam",
+    "source": "SMS / WhatsApp",
+    "text": "URGENT: Chase Bank alert! Your account access has been temporarily restricted due to unauthorized login attempts. Verify immediately at https://chase-security-verify.xyz/login within 24 hours to restore full access."
+  },
+  {
+    "id": "DEMO-02",
+    "category": "CREDENTIAL_HARVEST_OTP",
+    "expected_classification": "Likely Scam",
+    "source": "SMS",
+    "text": "Your one-time password OTP is 819204. Do not share this code. Our bank security representative is calling you now to confirm your debit card details and unlock your account."
+  },
+  {
+    "id": "DEMO-03",
+    "category": "LOTTERY_ADVANCE_FEE",
+    "expected_classification": "Likely Scam",
+    "source": "WhatsApp / SMS",
+    "text": "CONGRATULATIONS! You have been selected as the grand winner of the $1,500,000 Coca-Cola 2026 Promo! To claim your cash prize, send your full name and bank account details to claim@promo-awards.top."
+  },
+  {
+    "id": "DEMO-04",
+    "category": "LEGITIMATE_CONVERSATION",
+    "expected_classification": "Likely Safe",
+    "source": "WhatsApp / SMS",
+    "text": "Hey Sarah! Are we still meeting for lunch at the cafe around 1:00 PM today? Let me know if you want me to grab a table outside."
+  },
+  {
+    "id": "DEMO-05",
+    "category": "AMBIGUOUS_SHORT_MESSAGE",
+    "expected_classification": "Unable to Determine",
+    "source": "SMS",
+    "text": "Ok call me"
+  },
+  {
+    "id": "DEMO-06",
+    "category": "NOTIFICATION_STAGE1_BENIGN",
+    "expected_classification": "Likely Safe (Filtered on Device)",
+    "source": "WhatsApp Notification",
+    "text": "Alex: Sounds great, see you at 7pm tonight!"
+  }
+]

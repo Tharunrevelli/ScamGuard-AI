@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_light"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="🛡️ ScamGuard AI"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Privacy-conscious scam detection. Stage 1 executes on-device to filter benign text; Stage 2 verifies candidates remotely."
+            android:textSize="12sp"
+            android:textColor="@color/text_secondary"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Quick Test Presets -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="12dp">
+
+            <Button
+                android:id="@+id/btnPresetPhishing"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="36dp"
+                android:layout_weight="1"
+                android:text="Bank Scam"
+                android:textSize="11sp"
+                android:textColor="@color/primary"
+                android:background="#EEF2FF"
+                android:layout_marginEnd="6dp" />
+
+            <Button
+                android:id="@+id/btnPresetSafe"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="36dp"
+                android:layout_weight="1"
+                android:text="Normal Chat"
+                android:textSize="11sp"
+                android:textColor="@color/text_secondary"
+                android:background="#F1F5F9" />
+        </LinearLayout>
+
+        <!-- Message Input -->
+        <EditText
+            android:id="@+id/editMessageInput"
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:background="@drawable/input_background"
+            android:gravity="top|start"
+            android:hint="@string/prompt_input"
+            android:inputType="textMultiLine"
+            android:padding="14dp"
+            android:textColor="@color/text_primary"
+            android:textSize="14sp"
+            android:layout_marginBottom="14dp" />
+
+        <!-- Controls & Toggles -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/card_bg"
+            android:padding="14dp"
+            android:layout_marginBottom="16dp">
+
+            <Switch
+                android:id="@+id/switchRedactPii"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Redact PII on device"
+                android:textSize="13sp"
+                android:checked="true"
+                android:layout_marginBottom="8dp" />
+
+            <Switch
+                android:id="@+id/switchPrefilter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Stage 1 Local Prefilter"
+                android:textSize="13sp"
+                android:checked="true"
+                android:layout_marginBottom="8dp" />
+
+            <Switch
+                android:id="@+id/switchNotificationListener"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Background WhatsApp / SMS monitoring"
+                android:textSize="13sp"
+                android:checked="true"
+                android:layout_marginBottom="10dp" />
+
+            <Button
+                android:id="@+id/btnNotificationPermission"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:text="Authorize Notification Access"
+                android:textSize="11sp"
+                android:backgroundTint="#F8FAFC"
+                android:textColor="@color/primary" />
+        </LinearLayout>
+
+        <!-- Action Button -->
+        <Button
+            android:id="@+id/btnAnalyze"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="@string/action_analyze"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:backgroundTint="@color/primary"
+            android:layout_marginBottom="8dp" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/textStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:textColor="@color/text_secondary"
+            android:layout_marginBottom="16dp" />
+
+        <!-- History & Settings Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Recent Local Scans"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary" />
+
+            <Button
+                android:id="@+id/btnClearHistory"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:text="Clear"
+                android:textSize="11sp"
+                android:textColor="#EF4444" />
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/listHistory"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:background="@color/card_bg"
+            android:divider="#F1F5F9"
+            android:dividerHeight="1dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Backend URL Configuration -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Backend API Base URL"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_secondary"
+            android:layout_marginBottom="4dp" />
+
+        <EditText
+            android:id="@+id/editBackendUrl"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:background="@drawable/input_background"
+            android:padding="10dp"
+            android:textSize="12sp"
+            android:fontFamily="monospace"
+            android:text="http://10.0.2.2:8000/api/v1" />
+
+    </LinearLayout>
+
+</ScrollView>

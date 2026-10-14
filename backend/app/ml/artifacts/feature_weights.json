@@ -1,0 +1,206 @@
+{
+  "top_spam_indicators": [
+    {
+      "feature": "\u00a3",
+      "weight": 7.739742083509674
+    },
+    {
+      "feature": "call",
+      "weight": 6.616043126400245
+    },
+    {
+      "feature": "txt",
+      "weight": 5.5238371294122395
+    },
+    {
+      "feature": "free",
+      "weight": 5.329228325865061
+    },
+    {
+      "feature": "text",
+      "weight": 4.76629862602476
+    },
+    {
+      "feature": "reply",
+      "weight": 4.339235662011761
+    },
+    {
+      "feature": "to",
+      "weight": 4.051189163358679
+    },
+    {
+      "feature": "uk",
+      "weight": 4.044266987466635
+    },
+    {
+      "feature": "2",
+      "weight": 3.789016482758147
+    },
+    {
+      "feature": "www",
+      "weight": 3.691785127527352
+    },
+    {
+      "feature": "stop",
+      "weight": 3.647042377806819
+    },
+    {
+      "feature": "your",
+      "weight": 3.619863442708819
+    },
+    {
+      "feature": "150p",
+      "weight": 3.5391241323204112
+    },
+    {
+      "feature": "mobile",
+      "weight": 3.53794851791456
+    },
+    {
+      "feature": "1",
+      "weight": 3.412090727358953
+    },
+    {
+      "feature": "com",
+      "weight": 3.4021166881547478
+    },
+    {
+      "feature": "from",
+      "weight": 3.3812486835121596
+    },
+    {
+      "feature": "service",
+      "weight": 3.2638909688902222
+    },
+    {
+      "feature": "claim",
+      "weight": 3.1726849747095787
+    },
+    {
+      "feature": "chat",
+      "weight": 3.1278414234953806
+    },
+    {
+      "feature": "18",
+      "weight": 2.9180010339705467
+    },
+    {
+      "feature": "won",
+      "weight": 2.891929757065157
+    },
+    {
+      "feature": "ringtoneking",
+      "weight": 2.8899345348775385
+    },
+    {
+      "feature": "sms",
+      "weight": 2.7033593049157667
+    },
+    {
+      "feature": "now",
+      "weight": 2.652232223718955
+    }
+  ],
+  "top_ham_indicators": [
+    {
+      "feature": "i",
+      "weight": -5.96579542613276
+    },
+    {
+      "feature": "me",
+      "weight": -2.9691240422451206
+    },
+    {
+      "feature": "my",
+      "weight": -2.8604340618983763
+    },
+    {
+      "feature": "that",
+      "weight": -2.2522762821972635
+    },
+    {
+      "feature": "ok",
+      "weight": -2.2197237621158563
+    },
+    {
+      "feature": "gt",
+      "weight": -2.0289147981293407
+    },
+    {
+      "feature": "lt",
+      "weight": -2.0209532024606425
+    },
+    {
+      "feature": "he",
+      "weight": -1.7911622642243048
+    },
+    {
+      "feature": "but",
+      "weight": -1.7665330600696536
+    },
+    {
+      "feature": "good",
+      "weight": -1.760821185740956
+    },
+    {
+      "feature": "lt gt",
+      "weight": -1.7563838963410123
+    },
+    {
+      "feature": "da",
+      "weight": -1.7439240306180448
+    },
+    {
+      "feature": "it",
+      "weight": -1.705059775608865
+    },
+    {
+      "feature": "its",
+      "weight": -1.6754031128807398
+    },
+    {
+      "feature": "then",
+      "weight": -1.657402252921754
+    },
+    {
+      "feature": "how",
+      "weight": -1.6537742960530675
+    },
+    {
+      "feature": "when",
+      "weight": -1.6095614109630876
+    },
+    {
+      "feature": "k",
+      "weight": -1.586132023259737
+    },
+    {
+      "feature": "come",
+      "weight": -1.5858476900336498
+    },
+    {
+      "feature": "got",
+      "weight": -1.5792600896564692
+    },
+    {
+      "feature": "in",
+      "weight": -1.577517540928179
+    },
+    {
+      "feature": "\u00fc",
+      "weight": -1.5725749636202981
+    },
+    {
+      "feature": "u",
+      "weight": -1.5402210914759362
+    },
+    {
+      "feature": "at",
+      "weight": -1.5266955277288425
+    },
+    {
+      "feature": "so",
+      "weight": -1.5223644310656932
+    }
+  ]
+}
