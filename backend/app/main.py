@@ -87,6 +87,17 @@ if os.path.exists(WEB_DIR):
             return FileResponse(index_file)
         return {"message": f"ScamGuard API is running. Visit /docs for OpenAPI specifications."}
 
+    @app.get("/download-apk", tags=["Mobile App"])
+    async def download_apk():
+        apk_path = os.path.join(WEB_DIR, "ScamGuard.apk")
+        if os.path.exists(apk_path):
+            return FileResponse(
+                apk_path,
+                media_type="application/vnd.android.package-archive",
+                filename="ScamGuard.apk"
+            )
+        return JSONResponse(status_code=404, content={"message": "APK file not found."})
+
 
 if __name__ == "__main__":
     import uvicorn
