@@ -25,7 +25,7 @@ ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT_DIR)
 
 from sklearn.model_selection import train_test_split
-from ml.train import load_dataset, DATA_PATH
+from ml.train import load_dataset
 from backend.app.core.rules import default_rule_engine
 from backend.app.core.prefilter import default_local_prefilter
 from backend.app.core.hybrid import default_hybrid_engine
@@ -67,8 +67,9 @@ def calculate_metrics(y_true, y_pred, elapsed_total_ms):
 
 
 def run_comprehensive_evaluation():
-    print(f"Loading genuine dataset for evaluation from: {DATA_PATH}")
-    texts, labels = load_dataset(DATA_PATH)
+    print("Loading unified dataset for evaluation...")
+    default_model_service._load()
+    texts, labels = load_dataset()
     _, X_test, _, y_test = train_test_split(
         texts,
         labels,

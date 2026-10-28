@@ -135,6 +135,10 @@ async def detect_message(payload: DetectionRequest, request: Request):
         stage_applied=stage_applied,
         pii_redacted=pii_redacted,
         redacted_preview=redacted_preview,
+        threat_vectors=hybrid_result.get("threat_vectors"),
+        url_intelligence=hybrid_result.get("url_intelligence"),
+        annotated_message=hybrid_result.get("annotated_message"),
+        token_attributions=hybrid_result.get("token_attributions"),
     )
 
 
@@ -203,3 +207,56 @@ async def evaluate_batch(payload: BatchEvaluateRequest):
         request_reduction_pct=reduction_pct,
         results=items
     )
+
+
+@router.post(
+    "/report",
+    summary="Generate Forensic Threat Incident Report",
+    description="Generates an in-depth digital forensic investigation report with IOCs, threat vectors, and playbook actions."
+)
+async def generate_report(payload: DetectionRequest):
+    t0 = time.perf_counter()
+    raw_text = payload.text
+    rule_res = default_rule_engine.evaluate(raw_text)
+    ml_res = default_model_service.predict(raw_text)
+    hybrid_res = default_hybrid_engine.evaluate(raw_text, rule_res, ml_res)
+    elapsed_ms = (time.perf_counter() - t0) * 1000
+
+    report_id = f"SG-FR-{uuid.uuid4().hex[:8].upper()}"
+    sha256_hash = default_privacy_guard.hash_text(raw_text)
+
+    # Format IOCs (Indicators of Compromise)
+    iocs = []
+    for u in hybrid_res.get("url_intelligence", {}).get("details", []):
+        iocs.append({
+            "type": "URL/DOMAIN",
+            "value": u["raw_url"],
+            "risk_score": u["risk_score"],
+            "notes": "; ".join(u.get("risk_factors", [])) or "Standard URL"
+        })
+
+    for ind in rule_res.get("indicators", []):
+        for snip in ind.get("matched_snippets", []):
+            iocs.append({
+                "type": f"REGEX_PATTERN/{ind['category']}",
+                "value": snip,
+                "risk_score": 75.0 if ind["severity"] in ("CRITICAL", "HIGH") else 40.0,
+                "notes": ind["description"]
+            })
+
+    return {
+        "report_id": report_id,
+        "timestamp_utc": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime()),
+        "message_hash_sha256": sha256_hash,
+        "classification": hybrid_res["classification"],
+        "risk_score": hybrid_res["risk_score"],
+        "confidence_level": f"{hybrid_res['confidence']*100:.1f}%",
+        "primary_threat_vector": hybrid_res.get("threat_vectors", {}).get("primary_vector", "None"),
+        "threat_vectors": hybrid_res.get("threat_vectors", {}).get("scores", {}),
+        "threat_ratings": hybrid_res.get("threat_vectors", {}).get("ratings", {}),
+        "indicators_of_compromise": iocs,
+        "forensic_reasons": hybrid_res["reasons"],
+        "incident_playbook_actions": hybrid_res["suggested_actions"],
+        "model_architecture": ml_res["model_version"],
+        "investigation_latency_ms": round(elapsed_ms, 2),
+    }

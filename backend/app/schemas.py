@@ -55,6 +55,10 @@ class DetectionResponse(BaseModel):
     stage_applied: str
     pii_redacted: bool = False
     redacted_preview: Optional[str] = None
+    threat_vectors: Optional[Dict[str, Any]] = None
+    url_intelligence: Optional[Dict[str, Any]] = None
+    annotated_message: Optional[Dict[str, Any]] = None
+    token_attributions: Optional[List[Dict[str, Any]]] = None
 
 
 class PrefilterCheckRequest(BaseModel):

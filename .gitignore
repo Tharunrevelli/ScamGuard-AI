@@ -13,11 +13,13 @@ venv/
 .gradle/
 build/
 app/build/
+android/gradle-8.7/
 *.apk
 *.aab
 local.properties
 
 # Databases & local state
+*.db
 *.db-journal
 *.db-wal
 *.db-shm

@@ -1,0 +1,24 @@
+{
+  "estimators": [
+    {
+      "name": "Calibrated Logistic Regression",
+      "weight": 2,
+      "cv_f1": 0.9597,
+      "role": "Linear boundary & calibrated Platt scaling"
+    },
+    {
+      "name": "Complement Naive Bayes",
+      "weight": 1,
+      "cv_f1": 0.9262,
+      "role": "High-speed Bayesian generative prior for imbalanced data"
+    },
+    {
+      "name": "Random Forest Classifier",
+      "weight": 1,
+      "cv_f1": 0.9489,
+      "role": "Non-linear interaction modeling & adversarial evasion defense"
+    }
+  ],
+  "ensemble_f1": 0.9737,
+  "ensemble_accuracy": 0.9929
+}
