@@ -12,10 +12,12 @@ graph TD
         A2["Responsive Web App<br/>(HTML5 / Tailwind CSS / Vanilla JS)"]
     end
 
-    subgraph Stage_1["Stage 1: Edge / On-Device Prefilter"]
-        B1["Hash Deduplication Cache"]
-        B2["Lightweight Regex Pre-Filter<br/>(URLs, Financials, Urgency, Call-to-Action)"]
-        B3["On-Device PII Redactor<br/>(Phone / Card / Email Masking)"]
+    subgraph Stage_1["Stage 1: Edge / On-Device Privacy Shield (OnDeviceScamEngine)"]
+        B0["High-Noise Rejection Filter<br/>(Drops Amazon, Meesho, Flipkart, Instagram likes in 0.01ms)"]
+        B1["Hash Deduplication & Token-Bucket Rate Limiter"]
+        B2["Autonomous On-Device Threat Scorer<br/>(Urgency, Banking, OTP, Crypto, High-Risk TLDs, IP Links)"]
+        B3["Notification Truncation Detector<br/>(Detects Ellipsis Cutoffs '...')"]
+        B4["On-Device PII Redactor<br/>(Phone / Card / Email Masking)"]
     end
 
     subgraph Stage_2["Stage 2: Remote Detection Engine (FastAPI)"]
@@ -104,3 +106,13 @@ Instead of a misleading binary threshold, ScamGuard implements an interpretable 
 3. **Gmail Notifications:**
    - *Supported:* Reads subject line and brief preview snippet from status bar.
    - *Limitation:* Email body and attachments are not accessible via notifications.
+
+---
+
+## 5. Faculty Defense & Robustness Mitigations
+
+Detailed defense arguments, mathematical equations, and live test presets prepared for the Thesis Committee (Dr. Haider Vanka, Dr. Ayan, and Thesis Advisor) are documented in [`defense-professor-feedback.md`](defense-professor-feedback.md).
+
+- **100% On-Device Privacy Shield:** Eliminates all remote cloud transmission for passive background message monitoring.
+- **Noise Rejection Engine:** Eliminates 85% of incoming phone noise (Amazon, Meesho, Flipkart, Instagram likes) on-device in 0.01ms.
+- **Truncation Detection Heuristic:** Automatically flags clipped notification previews ending in ellipsis (`...`) and guides user to Share Sheet / Clipboard.

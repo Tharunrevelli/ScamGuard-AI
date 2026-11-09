@@ -32,6 +32,24 @@ class HistoryStorage(context: Context) {
         saveList(trimmed)
     }
 
+    fun recordDirect(requestId: String, source: String, classification: String, riskScore: Double, rawSnippet: String) {
+        val list = getHistory().toMutableList()
+        val snippetPreview = if (rawSnippet.length > 60) rawSnippet.substring(0, 60) + "..." else rawSnippet
+
+        val record = LocalAuditRecord(
+            requestId = requestId,
+            timestamp = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm", java.util.Locale.getDefault()).format(java.util.Date()),
+            source = source,
+            classification = classification,
+            riskScore = riskScore,
+            summary = snippetPreview
+        )
+
+        list.add(0, record)
+        val trimmed = if (list.size > 50) list.subList(0, 50) else list
+        saveList(trimmed)
+    }
+
     fun getHistory(): List<LocalAuditRecord> {
         val jsonStr = prefs.getString("history_records", "[]") ?: "[]"
         val list = mutableListOf<LocalAuditRecord>()

@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
 
     <application
         android:allowBackup="false"
@@ -39,6 +40,16 @@
             android:name=".ResultsActivity"
             android:exported="false"
             android:label="Detection Analysis" />
+
+        <!-- SMS Broadcast Receiver -->
+        <receiver
+            android:name=".SmsReceiver"
+            android:exported="true">
+            <intent-filter android:priority="999">
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+                <action android:name="com.scamguard.app.TEST_SMS" />
+            </intent-filter>
+        </receiver>
 
         <!-- Native Notification Listener Service -->
         <service

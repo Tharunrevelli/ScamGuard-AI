@@ -31,6 +31,45 @@ class LocalPrefilter:
             r"\b(call|click|login|sign in|visit|dial|text|reply|send|claim|collect)\b",
             re.IGNORECASE
         )
+        self.ellipsis_pattern = re.compile(r"(\.\.\.|\u2026|\.\.\s*$)", re.IGNORECASE)
+        self.noise_packages = {
+            "com.amazon.mShop.android.shopping",
+            "in.amazon.mShop.android.shopping",
+            "com.flipkart.android",
+            "com.meesho.supply",
+            "com.myntra.android",
+            "com.ril.ajio",
+            "com.application.zomato",
+            "in.swiggy.android",
+            "com.ubercab",
+            "com.olacabs.customer",
+            "com.instagram.android",
+            "com.facebook.katana",
+        }
+
+    def is_noise_package(self, package_name: str) -> bool:
+        """
+        Check if an incoming notification package is a high-volume e-commerce,
+        social media engagement, or utility app that should be rejected immediately.
+        """
+        lower = package_name.lower()
+        if lower in self.noise_packages:
+            return True
+        for noise in ["amazon", "flipkart", "meesho", "myntra", "ajio", "zomato", "swiggy", "weather"]:
+            if noise in lower:
+                return True
+        return False
+
+    def check_truncation(self, text: str) -> tuple[bool, str | None]:
+        """
+        Detects if notification preview text was clipped by Android or messaging apps.
+        """
+        trimmed = text.strip()
+        if self.ellipsis_pattern.search(trimmed):
+            return True, "Notification preview ends with an ellipsis (...). Content may be clipped by Android."
+        if 60 <= len(trimmed) <= 350 and not (trimmed.endswith(".") or trimmed.endswith("!") or trimmed.endswith("?")):
+            return True, "Preview appears cut off mid-sentence. Full message should be verified via Share Sheet."
+        return False, None
 
     def evaluate(self, text: str, user_requested: bool = False) -> Dict[str, Any]:
         """

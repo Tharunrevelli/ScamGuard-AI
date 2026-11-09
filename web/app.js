@@ -1,6 +1,6 @@
 /**
- * ScamGuard PRO — Production Web Application Frontend Logic
- * Version 2.0 (Ensemble Architecture & Forensic Intelligence)
+ * ScamGuard PRO — Production Cybersecurity Web Application Frontend
+ * Version 2.0 (Ensemble Architecture, URL Intel & SOC Interface)
  */
 
 // Application State
@@ -13,7 +13,7 @@ const state = {
   sandboxTimer: null,
 };
 
-// Preset Sample Messages for Quick Testing
+// Preset Sample Messages for Deep Inspection
 const SAMPLES = {
   phishing: "URGENT: Chase Bank alert! Your online access has been temporarily suspended due to 3 suspicious login attempts. Verify immediately at https://chase-security-verify.xyz/login within 24 hours to prevent permanent closure.",
   otp: "Your verification code is 482910. Do not share this OTP with anyone. A customer care executive is waiting on the line to confirm your card details and unblock your account.",
@@ -37,25 +37,98 @@ const BATCH_PRESET = [
   "Sounds good, see you soon!"
 ];
 
-// Threat Vector Meta Mapping
+// Vector SVG Icons & Labels
 const VECTOR_META = {
-  urgency_coercion: { label: "Urgency & Coercion", icon: "⏱️" },
-  financial_risk: { label: "Financial / Money Risk", icon: "💳" },
-  credential_harvesting: { label: "Credential Harvesting", icon: "🔑" },
-  impersonation: { label: "Brand Impersonation", icon: "🎭" },
-  link_domain_risk: { label: "Suspicious Link / Typosquatting", icon: "🌐" },
-  social_engineering: { label: "Social Engineering / Lure", icon: "🎣" }
+  urgency_coercion: {
+    label: "Urgency & Psychological Coercion",
+    icon: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`
+  },
+  financial_risk: {
+    label: "Financial Asset / Payment Risk",
+    icon: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>`
+  },
+  credential_harvesting: {
+    label: "Credential & Account Harvesting",
+    icon: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>`
+  },
+  impersonation: {
+    label: "Brand / Authority Impersonation",
+    icon: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>`
+  },
+  link_domain_risk: {
+    label: "Suspicious Domain & Typosquatting",
+    icon: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" /></svg>`
+  },
+  social_engineering: {
+    label: "Social Engineering & Lure",
+    icon: `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>`
+  }
 };
 
-// Initialize on DOM Ready
+// =========================================================================
+// Initialization on DOM Ready
+// =========================================================================
 document.addEventListener("DOMContentLoaded", () => {
   initTheme();
   initSessionDisplay();
   checkApiHealth();
-  loadBenchmarkData();
-  loadAuditHistory();
-  initSandbox();
+  initKeyboardShortcuts();
 });
+
+// Toast Notification Engine
+function showToast(message, type = "info") {
+  const container = document.getElementById("toast-container");
+  if (!container) return;
+
+  const toast = document.createElement("div");
+  toast.className = `toast toast-${type}`;
+
+  let icon = "";
+  if (type === "success") {
+    icon = `<svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>`;
+  } else if (type === "error") {
+    icon = `<svg class="w-4 h-4 text-rose-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>`;
+  } else {
+    icon = `<svg class="w-4 h-4 text-indigo-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`;
+  }
+
+  toast.innerHTML = `
+    ${icon}
+    <div class="flex-1 font-medium text-xs leading-relaxed">${message}</div>
+    <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-xs font-bold">&times;</button>
+  `;
+
+  container.appendChild(toast);
+
+  // Trigger smooth enter
+  requestAnimationFrame(() => {
+    toast.classList.add("show");
+  });
+
+  // Auto dismiss
+  setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => toast.remove(), 250);
+  }, 4000);
+}
+
+// Keyboard Shortcuts
+function initKeyboardShortcuts() {
+  document.addEventListener("keydown", (e) => {
+    // Ctrl + Enter or Cmd + Enter to run detection
+    if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+      const activeTab = document.querySelector(".tab-content.active");
+      if (activeTab && activeTab.id === "tab-detector") {
+        e.preventDefault();
+        analyzeMessage();
+      }
+    }
+    // Escape to close modal
+    if (e.key === "Escape") {
+      closeForensicReportModal();
+    }
+  });
+}
 
 // Theme Management (Dark Mode Default)
 function initTheme() {
@@ -72,15 +145,16 @@ function toggleTheme() {
 
 function applyTheme(theme) {
   const icon = document.getElementById("theme-icon");
-  const text = document.getElementById("theme-text");
   if (theme === "dark") {
     document.documentElement.classList.add("dark");
-    if (icon) icon.textContent = "☀️";
-    if (text) text.textContent = "Light";
+    if (icon) {
+      icon.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>`;
+    }
   } else {
     document.documentElement.classList.remove("dark");
-    if (icon) icon.textContent = "🌙";
-    if (text) text.textContent = "Dark";
+    if (icon) {
+      icon.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>`;
+    }
   }
 }
 
@@ -106,13 +180,13 @@ function saveSettings() {
     state.apiBase = urlEl.value.trim();
   }
   checkApiHealth();
-  alert("Settings saved successfully.");
+  showToast("Endpoint settings applied successfully", "success");
 }
 
 // Tab Switching
 function switchTab(tabId) {
   document.querySelectorAll(".tab-content").forEach(el => el.classList.remove("active"));
-  document.querySelectorAll(".nav-btn").forEach(el => el.classList.remove("active"));
+  document.querySelectorAll(".nav-tab-btn").forEach(el => el.classList.remove("active"));
 
   const targetTab = document.getElementById(`tab-${tabId}`);
   if (targetTab) targetTab.classList.add("active");
@@ -123,6 +197,7 @@ function switchTab(tabId) {
   if (tabId === "benchmark") loadBenchmarkData();
   if (tabId === "history") loadAuditHistory();
   if (tabId === "sandbox") initSandbox();
+  if (tabId === "defense") updateScalabilitySim();
 }
 
 // Health Check
@@ -133,14 +208,14 @@ async function checkApiHealth() {
     const res = await fetch(`${state.apiBase}/health`);
     if (res.ok) {
       const data = await res.json();
-      badge.className = "flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800";
-      text.textContent = data.model_loaded ? "Backend & ML Live" : "API Live (Heuristics)";
+      badge.className = "flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20";
+      text.textContent = data.model_loaded ? "Ensemble v2.0 Live" : "API Connected";
     } else {
       throw new Error("HTTP " + res.status);
     }
   } catch (err) {
-    badge.className = "flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800";
-    text.textContent = "Backend Offline";
+    badge.className = "flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20";
+    text.textContent = "Engine Offline";
   }
 }
 
@@ -150,6 +225,10 @@ function loadSample(key) {
   if (input && SAMPLES[key]) {
     input.value = SAMPLES[key];
     updateCharCount();
+    // Highlight chip
+    document.querySelectorAll(".scenario-chip, .preset-chip").forEach(c => c.classList.remove("active"));
+    const activeChip = Array.from(document.querySelectorAll(".scenario-chip, .preset-chip")).find(c => c.textContent.toLowerCase().includes(key.substring(0, 3)));
+    if (activeChip) activeChip.classList.add("active");
   }
 }
 
@@ -159,6 +238,9 @@ function clearInput() {
     input.value = "";
     updateCharCount();
   }
+  document.querySelectorAll(".scenario-chip, .preset-chip").forEach(c => c.classList.remove("active"));
+  document.getElementById("results-card").classList.add("hidden");
+  document.getElementById("results-empty").classList.remove("hidden");
 }
 
 function updateCharCount() {
@@ -169,12 +251,31 @@ function updateCharCount() {
   }
 }
 
-// Main Detection Analysis
+// Number Counter Animation Helper
+function animateValue(el, start, end, duration) {
+  const startTime = performance.now();
+  function update(currentTime) {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    // Smooth ease-out quad
+    const ease = 1 - (1 - progress) * (1 - progress);
+    const current = Math.floor(start + (end - start) * ease);
+    el.innerHTML = `${current}<span class="text-xs font-normal opacity-70">/100</span>`;
+    if (progress < 1) {
+      requestAnimationFrame(update);
+    }
+  }
+  requestAnimationFrame(update);
+}
+
+// =========================================================================
+// Main Detection Execution
+// =========================================================================
 async function analyzeMessage() {
   const input = document.getElementById("message-input");
   const text = input ? input.value.trim() : "";
   if (!text) {
-    alert("Please enter or paste a message to inspect.");
+    showToast("Please enter or paste message content to analyze", "error");
     return;
   }
 
@@ -188,7 +289,7 @@ async function analyzeMessage() {
 
   btn.disabled = true;
   btnSpinner.classList.remove("hidden");
-  btnText.textContent = "Analyzing Threat Vectors...";
+  btnText.textContent = "Inspecting Threat Vectors...";
 
   try {
     const payload = {
@@ -219,13 +320,14 @@ async function analyzeMessage() {
     state.currentDetectionData = data;
 
     displayResults(data);
+    showToast("Threat assessment compiled successfully", "success");
 
   } catch (err) {
-    alert("Analysis Failed: " + err.message);
+    showToast(`Analysis Failed: ${err.message}`, "error");
   } finally {
     btn.disabled = false;
     btnSpinner.classList.add("hidden");
-    btnText.textContent = "Run Forensic Threat Analysis";
+    btnText.textContent = "Run Threat Analysis";
   }
 }
 
@@ -246,45 +348,52 @@ function displayResults(data) {
 
   const score = Math.round(data.risk_score);
   title.textContent = data.classification;
-  scoreEl.innerHTML = `${score}<span class="text-xs font-normal opacity-70">/100</span>`;
   conf.textContent = `Confidence: ${(data.confidence * 100).toFixed(0)}%`;
   stageBadge.textContent = data.stage_applied;
   latency.textContent = `${data.processing_time_ms.toFixed(1)} ms`;
 
+  // Animate numeric score count up
+  animateValue(scoreEl, 0, score, 600);
+
   // Circular SVG Gauge Animation
   const gaugeBar = document.getElementById("gauge-circle-bar");
   if (gaugeBar) {
-    const circumference = 2 * Math.PI * 45; // ~282.74
+    const radius = 42;
+    const circumference = 2 * Math.PI * radius; // ~263.89
     gaugeBar.style.strokeDasharray = `${circumference} ${circumference}`;
     const offset = circumference - (score / 100) * circumference;
     gaugeBar.style.strokeDashoffset = offset;
   }
 
-  // Tier Colors & Banner Styling
-  banner.className = "p-5 rounded-2xl border flex flex-col sm:flex-row items-center justify-between gap-4 ";
+  // Tier Classification Styling & Icons
+  banner.className = "assessment-banner flex flex-col sm:flex-row items-center justify-between gap-4 ";
   if (data.classification === "Likely Scam") {
-    banner.classList.add("tier-scam");
-    icon.textContent = "🚨";
-    subtitle.textContent = "High Scam Risk: Financial or Identity Compromise Likely";
-    if (gaugeBar) gaugeBar.style.stroke = "#ef4444";
+    banner.classList.add("banner-scam");
+    icon.className = "w-11 h-11 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-500 flex items-center justify-center";
+    icon.innerHTML = `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>`;
+    subtitle.textContent = "High Scam Risk: Critical financial or credential compromise vector identified";
+    if (gaugeBar) gaugeBar.style.stroke = "var(--threat-critical)";
   } else if (data.classification === "Suspicious") {
-    banner.classList.add("tier-suspicious");
-    icon.textContent = "⚠️";
-    subtitle.textContent = "Caution: Contains Anomalous Urgency or Unknown Links";
-    if (gaugeBar) gaugeBar.style.stroke = "#f59e0b";
+    banner.classList.add("banner-suspicious");
+    icon.className = "w-11 h-11 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-500 flex items-center justify-center";
+    icon.innerHTML = `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`;
+    subtitle.textContent = "Elevated Risk: Contains anomalous urgency, marketing claims, or unverified links";
+    if (gaugeBar) gaugeBar.style.stroke = "var(--threat-medium)";
   } else if (data.classification === "Unable to Determine") {
-    banner.classList.add("tier-undetermined");
-    icon.textContent = "❓";
-    subtitle.textContent = "Ambiguous Input: Insufficient Evidence for High-Confidence Label";
-    if (gaugeBar) gaugeBar.style.stroke = "#8b5cf6";
+    banner.classList.add("banner-undetermined");
+    icon.className = "w-11 h-11 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-500 flex items-center justify-center";
+    icon.innerHTML = `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`;
+    subtitle.textContent = "Inconclusive: Text length or context is insufficient for high-confidence classification";
+    if (gaugeBar) gaugeBar.style.stroke = "var(--threat-undetermined)";
   } else {
-    banner.classList.add("tier-safe");
-    icon.textContent = "🛡️";
-    subtitle.textContent = "Benign Content: No High-Risk Vectors Detected";
-    if (gaugeBar) gaugeBar.style.stroke = "#10b981";
+    banner.classList.add("banner-safe");
+    icon.className = "w-11 h-11 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 flex items-center justify-center";
+    icon.innerHTML = `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`;
+    subtitle.textContent = "Benign Content: Consistent with normal interpersonal or transactional communication";
+    if (gaugeBar) gaugeBar.style.stroke = "var(--threat-safe)";
   }
 
-  // Redacted Text Preview (if applicable)
+  // Redacted Text Preview Banner
   const redBox = document.getElementById("redacted-preview-box");
   const redText = document.getElementById("redacted-preview-text");
   if (data.pii_redacted && data.redacted_preview) {
@@ -294,7 +403,19 @@ function displayResults(data) {
     redBox.classList.add("hidden");
   }
 
-  // 1. Visual Threat Inspector (Annotated Tokens)
+  // Truncation Warning Banner (Professor Feedback)
+  const truncBox = document.getElementById("truncation-warning-box");
+  const truncText = document.getElementById("truncation-warning-text");
+  if (truncBox) {
+    if (data.is_truncated) {
+      truncBox.classList.remove("hidden");
+      truncText.textContent = data.truncation_warning || "Notification preview appears clipped by Android. To ensure complete scam detection, submit the full unclipped message via Android Share Sheet or manual paste.";
+    } else {
+      truncBox.classList.add("hidden");
+    }
+  }
+
+  // 1. Visual Threat Inspector (Annotated Message)
   const annotatedBox = document.getElementById("annotated-message-box");
   if (annotatedBox) {
     if (data.annotated_message && data.annotated_message.html) {
@@ -306,7 +427,7 @@ function displayResults(data) {
     }
   }
 
-  // 2. Multidimensional Threat Vectors (6 Vectors)
+  // 2. Multidimensional Threat Vectors
   const vectorsGrid = document.getElementById("threat-vectors-grid");
   const primBadge = document.getElementById("primary-vector-badge");
   if (vectorsGrid) {
@@ -317,41 +438,41 @@ function displayResults(data) {
 
     if (primBadge) {
       primBadge.textContent = `Primary: ${prim.replace(/_/g, " ").toUpperCase()}`;
-      primBadge.className = prim === "none" ? "badge-neutral text-[10px]" : "badge-threat text-[10px]";
     }
 
     if (vectors) {
       Object.entries(vectors).forEach(([key, vScore]) => {
-        const meta = VECTOR_META[key] || { label: key, icon: "🔍" };
+        const meta = VECTOR_META[key] || { label: key, icon: "•" };
         const rating = ratings ? (ratings[key] || "LOW") : "LOW";
 
         let barColor = "bg-emerald-500";
-        let ratingBadgeClass = "text-emerald-700 bg-emerald-50 dark:bg-emerald-950/60 border-emerald-200 dark:border-emerald-800";
+        let ratingBadge = "text-emerald-500 bg-emerald-500/10 border-emerald-500/20";
         if (rating === "CRITICAL") {
           barColor = "bg-rose-500";
-          ratingBadgeClass = "text-rose-700 bg-rose-50 dark:bg-rose-950/60 border-rose-200 dark:border-rose-800";
+          ratingBadge = "text-rose-500 bg-rose-500/10 border-rose-500/20";
         } else if (rating === "HIGH") {
           barColor = "bg-amber-500";
-          ratingBadgeClass = "text-amber-700 bg-amber-50 dark:bg-amber-950/60 border-amber-200 dark:border-amber-800";
+          ratingBadge = "text-amber-500 bg-amber-500/10 border-amber-500/20";
         } else if (rating === "MEDIUM") {
           barColor = "bg-yellow-500";
-          ratingBadgeClass = "text-yellow-700 bg-yellow-50 dark:bg-yellow-950/60 border-yellow-200 dark:border-yellow-800";
+          ratingBadge = "text-yellow-500 bg-yellow-500/10 border-yellow-500/20";
         }
 
         const div = document.createElement("div");
-        div.className = "p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-1.5";
+        div.className = "p-3 rounded-xl soc-card-inset space-y-2";
         div.innerHTML = `
-          <div class="flex items-center justify-between font-semibold">
+          <div class="flex items-center justify-between text-xs font-semibold">
             <span class="flex items-center gap-1.5 text-slate-800 dark:text-slate-200">
-              <span>${meta.icon}</span> <span>${meta.label}</span>
+              <span class="text-indigo-500">${meta.icon}</span>
+              <span>${meta.label}</span>
             </span>
             <div class="flex items-center gap-1.5">
-              <span class="px-1.5 py-0.5 rounded text-[10px] font-bold border ${ratingBadgeClass}">${rating}</span>
-              <span class="font-mono text-[11px] text-slate-500">${vScore.toFixed(0)}%</span>
+              <span class="px-1.5 py-0.5 rounded text-[10px] font-bold border ${ratingBadge}">${rating}</span>
+              <span class="font-mono text-[11px] text-slate-400">${vScore.toFixed(0)}%</span>
             </div>
           </div>
-          <div class="vector-bar-bg">
-            <div class="vector-bar-fill ${barColor}" style="width: ${vScore}%"></div>
+          <div class="vector-track">
+            <div class="vector-bar ${barColor}" style="width: ${vScore}%"></div>
           </div>
         `;
         vectorsGrid.appendChild(div);
@@ -359,7 +480,7 @@ function displayResults(data) {
     }
   }
 
-  // 3. URL & Domain Forensic Intelligence
+  // 3. Domain Typosquatting & Threat Intelligence
   const urlCard = document.getElementById("url-intel-card");
   const urlDetails = document.getElementById("url-intel-details");
   if (urlCard && urlDetails) {
@@ -368,26 +489,26 @@ function displayResults(data) {
       urlCard.classList.remove("hidden");
       urlDetails.innerHTML = urls.map(u => {
         const typosquatWarning = u.is_typosquat ? 
-          `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-700 dark:bg-rose-950/80 dark:text-rose-300 border border-rose-300 dark:border-rose-800">⚠️ Typosquatting: Target Brand <strong>${u.typosquat_target}</strong> (Levenshtein Dist: ${u.typosquat_distance})</span>` : "";
+          `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/10 text-rose-500 border border-rose-500/20">Typosquat Target: <strong>${u.typosquat_target}</strong> (Edit Distance: ${u.typosquat_distance})</span>` : "";
         const riskyTldWarning = u.risky_tld ? 
-          `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-700 dark:bg-amber-950/80 dark:text-amber-300 border border-amber-300 dark:border-amber-800">Suspicious TLD: .${u.tld}</span>` : "";
-        const entropyBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Entropy: ${u.entropy.toFixed(2)}</span>`;
-        const shortenerBadge = u.is_shortener ? `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-100 text-purple-700 dark:bg-purple-950/80 dark:text-purple-300">URL Shortener</span>` : "";
+          `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/10 text-amber-500 border border-amber-500/20">Suspicious TLD: .${u.tld}</span>` : "";
+        const entropyBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-100 dark:bg-[#151B26] text-slate-500">Entropy: ${u.entropy.toFixed(2)}</span>`;
+        const shortenerBadge = u.is_shortener ? `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-500/10 text-purple-500 border border-purple-500/20">URL Shortener</span>` : "";
 
         return `
-          <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-1.5 font-mono text-[11px]">
+          <div class="p-3 rounded-xl soc-card-inset space-y-2 font-mono text-[11px]">
             <div class="flex items-center justify-between flex-wrap gap-1 font-bold text-slate-800 dark:text-slate-200">
-              <span class="break-all text-indigo-600 dark:text-indigo-400">${u.raw_url}</span>
+              <span class="break-all text-indigo-500 dark:text-indigo-400">${u.raw_url}</span>
               <span class="px-2 py-0.5 rounded text-[10px] ${u.risk_score >= 50 ? 'bg-rose-500/10 text-rose-500 border border-rose-500/20' : 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20'}">Domain Threat: ${u.risk_score.toFixed(0)}/100</span>
             </div>
             <div class="flex items-center gap-2 flex-wrap">
-              <span class="text-slate-500 dark:text-slate-400 font-sans">Hostname: <strong>${u.domain}</strong></span>
+              <span class="text-slate-500 font-sans">Hostname: <strong>${u.domain}</strong></span>
               ${typosquatWarning}
               ${riskyTldWarning}
               ${entropyBadge}
               ${shortenerBadge}
             </div>
-            ${u.risk_factors && u.risk_factors.length > 0 ? `<div class="text-[10px] text-rose-600 dark:text-rose-400 font-sans">Flags: ${u.risk_factors.join(" • ")}</div>` : ''}
+            ${u.risk_factors && u.risk_factors.length > 0 ? `<div class="text-[10px] text-rose-500 font-sans">Risk Factors: ${u.risk_factors.join(" • ")}</div>` : ''}
           </div>
         `;
       }).join("");
@@ -404,10 +525,10 @@ function displayResults(data) {
       attrList.innerHTML = tokens.map(t => {
         const isScam = t.weight > 0;
         const badgeColor = isScam 
-          ? "bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-900"
-          : "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-900";
+          ? "bg-rose-500/10 text-rose-500 border-rose-500/20"
+          : "bg-emerald-500/10 text-emerald-500 border-emerald-500/20";
         const sign = isScam ? "+" : "";
-        return `<span class="px-2 py-0.5 rounded-full font-mono border ${badgeColor}" title="Weight: ${t.weight.toFixed(2)}">${t.token} <strong class="opacity-80">${sign}${t.weight.toFixed(1)}</strong></span>`;
+        return `<span class="px-2 py-0.5 rounded font-mono border ${badgeColor}" title="Feature Weight: ${t.weight.toFixed(2)}">${t.token} <strong class="opacity-80">${sign}${t.weight.toFixed(1)}</strong></span>`;
       }).join("");
     } else {
       attrList.innerHTML = `<span class="text-xs text-slate-400 italic">No dominant token-level weight signals identified.</span>`;
@@ -420,8 +541,11 @@ function displayResults(data) {
     recList.innerHTML = "";
     (data.suggested_actions || data.reasons || []).forEach(act => {
       const li = document.createElement("li");
-      li.className = "flex items-start gap-1.5";
-      li.innerHTML = `<span class="text-indigo-600 dark:text-indigo-400 mt-0.5">•</span><span>${act}</span>`;
+      li.className = "flex items-start gap-2";
+      li.innerHTML = `
+        <svg class="w-4 h-4 text-indigo-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+        <span class="leading-relaxed">${act}</span>
+      `;
       recList.appendChild(li);
     });
   }
@@ -430,7 +554,7 @@ function displayResults(data) {
 // User Feedback
 async function sendFeedback(label) {
   if (!state.currentRequestId) {
-    alert("No active detection result to rate.");
+    showToast("No active inspection to rate", "error");
     return;
   }
   try {
@@ -443,21 +567,20 @@ async function sendFeedback(label) {
       body: JSON.stringify({
         request_id: state.currentRequestId,
         actual_label: label,
-        user_notes: `Marked by user as ${label}`
+        user_notes: `Marked by analyst as ${label}`
       })
     });
     if (res.ok) {
-      alert("Feedback recorded. Thank you for contributing to model evaluation!");
+      showToast("Feedback submitted to evaluation store", "success");
     }
   } catch (err) {
-    console.error("Feedback error", err);
+    showToast("Feedback submission failed", "error");
   }
 }
 
-// ==========================================
+// =========================================================================
 // TAB 2: LIVE "WHAT-IF" SIMULATION SANDBOX
-// ==========================================
-
+// =========================================================================
 function initSandbox() {
   const input = document.getElementById("sandbox-input");
   if (input && !input.value.trim()) {
@@ -499,7 +622,7 @@ function runSandboxAnalysis() {
     const input = document.getElementById("sandbox-input");
     const text = input ? input.value.trim() : "";
     if (!text) {
-      document.getElementById("sandbox-score").textContent = "0";
+      document.getElementById("sandbox-score").innerHTML = `0<span class="text-xs font-normal opacity-70">/100</span>`;
       document.getElementById("sandbox-classification").textContent = "Awaiting Input";
       return;
     }
@@ -526,18 +649,16 @@ function runSandboxAnalysis() {
       document.getElementById("sandbox-classification").textContent = data.classification;
       document.getElementById("sandbox-summary").textContent = `Confidence: ${(data.confidence * 100).toFixed(0)}% • Stage: ${data.stage_applied}`;
 
-      // Banner style
       const banner = document.getElementById("sandbox-result-banner");
-      banner.className = "p-4 rounded-xl border flex items-center justify-between ";
+      banner.className = "assessment-banner flex items-center justify-between ";
       if (data.classification === "Likely Scam") {
-        banner.classList.add("tier-scam");
+        banner.classList.add("banner-scam");
       } else if (data.classification === "Suspicious") {
-        banner.classList.add("tier-suspicious");
+        banner.classList.add("banner-suspicious");
       } else {
-        banner.classList.add("tier-safe");
+        banner.classList.add("banner-safe");
       }
 
-      // Render miniature threat vectors
       const vecContainer = document.getElementById("sandbox-vectors-list");
       if (vecContainer && data.threat_vectors && data.threat_vectors.scores) {
         vecContainer.innerHTML = "";
@@ -551,11 +672,11 @@ function runSandboxAnalysis() {
           row.className = "space-y-1";
           row.innerHTML = `
             <div class="flex items-center justify-between text-[11px] font-medium text-slate-700 dark:text-slate-300">
-              <span>${meta.icon} ${meta.label}</span>
+              <span class="flex items-center gap-1.5"><span class="text-indigo-500">${meta.icon}</span> ${meta.label}</span>
               <span class="font-mono">${score.toFixed(0)}%</span>
             </div>
-            <div class="vector-bar-bg">
-              <div class="vector-bar-fill ${color}" style="width: ${score}%"></div>
+            <div class="vector-track">
+              <div class="vector-bar ${color}" style="width: ${score}%"></div>
             </div>
           `;
           vecContainer.appendChild(row);
@@ -568,20 +689,19 @@ function runSandboxAnalysis() {
   }, 200);
 }
 
-// ==========================================
-// FORENSIC INCIDENT REPORT & EXPORT
-// ==========================================
-
+// =========================================================================
+// FORENSIC INVESTIGATION REPORT & EXPORT
+// =========================================================================
 async function openForensicReportModal() {
   if (!state.currentText) {
-    alert("Please inspect a message first to generate a forensic report.");
+    showToast("Please inspect a message first to generate a threat report", "error");
     return;
   }
 
   const modal = document.getElementById("forensic-report-modal");
   const modalContent = document.getElementById("modal-report-content");
-  modalContent.innerHTML = `<div class="p-6 text-center text-slate-500"><span class="spinner"></span> Compiling Forensic Artifacts & IOCs...</div>`;
-  modal.classList.remove("hidden");
+  modalContent.innerHTML = `<div class="p-8 text-center text-slate-400"><span class="spinner-ring"></span> Compiling Forensic Artifacts & IOCs...</div>`;
+  modal.classList.add("open");
 
   try {
     const res = await fetch(`${state.apiBase}/report`, {
@@ -601,14 +721,14 @@ async function openForensicReportModal() {
 
     modalContent.innerHTML = `
       <div class="space-y-4 font-sans">
-        <div class="bg-slate-50 dark:bg-slate-950 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+        <div class="soc-card-inset p-3.5 grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
           <div>
             <span class="text-slate-400 block text-[10px] uppercase font-bold">Investigation Time</span>
             <span class="font-mono text-slate-800 dark:text-slate-200">${rep.timestamp_utc}</span>
           </div>
           <div>
             <span class="text-slate-400 block text-[10px] uppercase font-bold">Verdict</span>
-            <span class="font-bold ${rep.classification === 'Likely Scam' ? 'text-rose-600' : 'text-emerald-600'}">${rep.classification} (${rep.risk_score.toFixed(0)}/100)</span>
+            <span class="font-bold ${rep.classification === 'Likely Scam' ? 'text-rose-500' : 'text-emerald-500'}">${rep.classification} (${rep.risk_score.toFixed(0)}/100)</span>
           </div>
           <div>
             <span class="text-slate-400 block text-[10px] uppercase font-bold">Primary Threat Vector</span>
@@ -618,7 +738,7 @@ async function openForensicReportModal() {
 
         <div>
           <span class="text-slate-400 block text-[10px] uppercase font-bold mb-1">SHA-256 Message Cryptographic Hash</span>
-          <div class="p-2 bg-slate-100 dark:bg-slate-800 rounded font-mono text-[11px] break-all select-all text-slate-700 dark:text-slate-300">
+          <div class="p-2 soc-card-inset font-mono text-[11px] break-all select-all text-slate-700 dark:text-slate-300">
             ${rep.message_hash_sha256}
           </div>
         </div>
@@ -626,29 +746,29 @@ async function openForensicReportModal() {
         <div>
           <span class="text-slate-400 block text-[10px] uppercase font-bold mb-1">Indicators of Compromise (IOCs)</span>
           ${rep.indicators_of_compromise && rep.indicators_of_compromise.length > 0 ? `
-            <div class="border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden">
+            <div class="soc-card-inset overflow-hidden">
               <table class="w-full text-left text-xs">
-                <thead class="bg-slate-50 dark:bg-slate-800 text-slate-500 text-[10px] uppercase font-semibold">
+                <thead class="bg-slate-100 dark:bg-[#151B26] text-slate-500 text-[10px] uppercase font-semibold">
                   <tr>
                     <th class="px-3 py-1.5">Type</th>
                     <th class="px-3 py-1.5">Artifact / Value</th>
                     <th class="px-3 py-1.5">Risk</th>
-                    <th class="px-3 py-1.5">Notes</th>
+                    <th class="px-3 py-1.5">Forensic Notes</th>
                   </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100 dark:divide-slate-800 font-mono text-[11px]">
+                <tbody class="divide-y divide-slate-100 dark:divide-[#1C2433] font-mono text-[11px]">
                   ${rep.indicators_of_compromise.map(ioc => `
                     <tr>
                       <td class="px-3 py-1.5 text-indigo-500 font-sans text-[10px]">${ioc.type}</td>
                       <td class="px-3 py-1.5 text-slate-800 dark:text-slate-200 break-all">${ioc.value}</td>
-                      <td class="px-3 py-1.5 font-bold ${ioc.risk_score >= 50 ? 'text-rose-500' : 'text-slate-500'}">${ioc.risk_score.toFixed(0)}</td>
+                      <td class="px-3 py-1.5 font-bold ${ioc.risk_score >= 50 ? 'text-rose-500' : 'text-slate-400'}">${ioc.risk_score.toFixed(0)}</td>
                       <td class="px-3 py-1.5 text-slate-400 font-sans text-[10px]">${ioc.notes}</td>
                     </tr>
                   `).join("")}
                 </tbody>
               </table>
             </div>
-          ` : `<div class="text-xs text-slate-400 italic p-2 bg-slate-50 dark:bg-slate-950 rounded">No specific indicators or malicious domains extracted.</div>`}
+          ` : `<div class="text-xs text-slate-400 italic p-3 soc-card-inset">No specific indicators or malicious domains extracted.</div>`}
         </div>
 
         <div>
@@ -661,17 +781,18 @@ async function openForensicReportModal() {
     `;
 
   } catch (err) {
-    modalContent.innerHTML = `<div class="p-4 bg-rose-50 text-rose-700 rounded-xl">Error: ${err.message}</div>`;
+    modalContent.innerHTML = `<div class="p-4 bg-rose-500/10 text-rose-500 rounded-xl text-xs">Error generating report: ${err.message}</div>`;
   }
 }
 
 function closeForensicReportModal() {
-  document.getElementById("forensic-report-modal").classList.add("hidden");
+  const modal = document.getElementById("forensic-report-modal");
+  if (modal) modal.classList.remove("open");
 }
 
 function exportReportJSON() {
   if (!state.currentDetectionData) {
-    alert("Please inspect a message first before exporting JSON.");
+    showToast("Please inspect a message first before exporting JSON", "error");
     return;
   }
   const blob = new Blob([JSON.stringify(state.currentDetectionData, null, 2)], { type: "application/json" });
@@ -683,12 +804,12 @@ function exportReportJSON() {
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
+  showToast("JSON report downloaded", "success");
 }
 
-// ==========================================
+// =========================================================================
 // RESEARCH BENCHMARK & AUDIT HISTORY
-// ==========================================
-
+// =========================================================================
 async function loadBenchmarkData() {
   try {
     const res = await fetch(`${state.apiBase}/benchmark`);
@@ -696,7 +817,6 @@ async function loadBenchmarkData() {
     const data = await res.json();
     if (!data.models) return;
 
-    // Update KPI Cards
     const twoStage = data.models["two_stage_selective_architecture"];
     const mlModel = data.models["machine_learning_classifier"];
 
@@ -728,7 +848,7 @@ async function loadBenchmarkData() {
     for (const [key, m] of Object.entries(data.models)) {
       const isSelected = key === "two_stage_selective_architecture";
       const tr = document.createElement("tr");
-      if (isSelected) tr.className = "bg-indigo-50/50 dark:bg-indigo-950/40 font-semibold";
+      if (isSelected) tr.className = "bg-indigo-500/10 font-semibold";
 
       tr.innerHTML = `
         <td class="px-5 py-3 font-medium text-slate-900 dark:text-slate-100">${modelNames[key] || key}</td>
@@ -736,10 +856,10 @@ async function loadBenchmarkData() {
         <td class="px-4 py-3 text-center font-mono">${(m.precision * 100).toFixed(2)}%</td>
         <td class="px-4 py-3 text-center font-mono">${(m.recall * 100).toFixed(2)}%</td>
         <td class="px-4 py-3 text-center font-mono">${(m.f1_score * 100).toFixed(2)}%</td>
-        <td class="px-4 py-3 text-center font-mono text-rose-600 dark:text-rose-400">${(m.false_positive_rate * 100).toFixed(2)}%</td>
-        <td class="px-4 py-3 text-center font-mono text-amber-600 dark:text-amber-400">${(m.false_negative_rate * 100).toFixed(2)}%</td>
+        <td class="px-4 py-3 text-center font-mono text-rose-500">${(m.false_positive_rate * 100).toFixed(2)}%</td>
+        <td class="px-4 py-3 text-center font-mono text-amber-500">${(m.false_negative_rate * 100).toFixed(2)}%</td>
         <td class="px-4 py-3 text-center font-mono">${m.backend_requests} / ${data.test_samples}</td>
-        <td class="px-4 py-3 text-center font-mono text-indigo-700 dark:text-indigo-400 font-bold">${m.request_reduction_pct.toFixed(1)}%</td>
+        <td class="px-4 py-3 text-center font-mono text-indigo-500 dark:text-indigo-400 font-bold">${m.request_reduction_pct.toFixed(1)}%</td>
       `;
       tbody.appendChild(tr);
     }
@@ -770,9 +890,9 @@ async function loadAuditHistory() {
       tr.innerHTML = `
         <td class="px-5 py-3 text-slate-600 dark:text-slate-400 font-mono text-[11px]">${item.timestamp.replace("T", " ").substring(0, 19)}</td>
         <td class="px-4 py-3 font-medium text-slate-700 dark:text-slate-300">${item.source}</td>
-        <td class="px-4 py-3"><span class="badge-neutral">${item.classification}</span></td>
+        <td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-[10px] font-mono border">${item.classification}</span></td>
         <td class="px-4 py-3 font-mono font-semibold">${item.risk_score.toFixed(0)}</td>
-        <td class="px-4 py-3 font-mono text-slate-500">${item.latency_ms.toFixed(1)} ms</td>
+        <td class="px-4 py-3 font-mono text-slate-400">${item.latency_ms.toFixed(1)} ms</td>
         <td class="px-4 py-3 font-mono text-[10px] text-slate-400">${item.request_id.substring(0, 8)}...</td>
       `;
       tbody.appendChild(tr);
@@ -784,25 +904,23 @@ async function loadAuditHistory() {
 }
 
 async function clearAuditHistory() {
-  if (!confirm("Are you sure you want to delete all stored audit logs for this session?")) return;
   try {
     const res = await fetch(`${state.apiBase}/history`, {
       method: "DELETE",
       headers: { "X-Session-ID": state.sessionId }
     });
     if (res.ok) {
-      alert("Session history deleted.");
+      showToast("Session audit history cleared", "info");
       loadAuditHistory();
     }
   } catch (err) {
-    alert("Failed to delete history: " + err.message);
+    showToast("Failed to clear history: " + err.message, "error");
   }
 }
 
-// ==========================================
-// TAB 4: BATCH EVALUATOR
-// ==========================================
-
+// =========================================================================
+// TAB 4: BATCH TRAFFIC REDUCTION EVALUATOR
+// =========================================================================
 function loadBatchPreset() {
   const area = document.getElementById("batch-input");
   if (area) area.value = BATCH_PRESET.join("\n");
@@ -812,7 +930,7 @@ async function runBatchEvaluation() {
   const area = document.getElementById("batch-input");
   const raw = area ? area.value.trim() : "";
   if (!raw) {
-    alert("Please enter messages to benchmark.");
+    showToast("Please enter batch messages to evaluate", "error");
     return;
   }
   const messages = raw.split("\n").map(m => m.trim()).filter(m => m.length > 0);
@@ -820,7 +938,7 @@ async function runBatchEvaluation() {
 
   const container = document.getElementById("batch-results-container");
   container.classList.remove("hidden");
-  container.innerHTML = `<div class="p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 text-center"><span class="spinner"></span> Running Stage 1 vs Stage 2 batch benchmark...</div>`;
+  container.innerHTML = `<div class="p-8 soc-card text-center text-slate-400"><span class="spinner-ring"></span> Executing Stage 1 edge vs Stage 2 cloud benchmark...</div>`;
 
   try {
     const res = await fetch(`${state.apiBase}/evaluate-batch`, {
@@ -832,43 +950,43 @@ async function runBatchEvaluation() {
     const data = await res.json();
 
     container.innerHTML = `
-      <div class="bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/60 rounded-2xl p-5 grid grid-cols-1 sm:grid-cols-4 gap-4 text-center">
+      <div class="soc-card p-5 grid grid-cols-1 sm:grid-cols-4 gap-4 text-center">
         <div>
-          <span class="text-xs text-indigo-900 dark:text-indigo-300 block font-medium">Total Messages</span>
-          <span class="text-2xl font-black text-indigo-950 dark:text-indigo-100 font-mono">${data.total_messages}</span>
+          <span class="text-xs text-slate-500 block font-medium">Total Messages</span>
+          <span class="text-2xl font-bold font-mono text-slate-900 dark:text-slate-100">${data.total_messages}</span>
         </div>
         <div>
-          <span class="text-xs text-emerald-900 dark:text-emerald-300 block font-medium">Filtered Locally (Edge)</span>
-          <span class="text-2xl font-black text-emerald-600 dark:text-emerald-400 font-mono">${data.filtered_locally}</span>
+          <span class="text-xs text-emerald-500 block font-medium">Filtered On-Device</span>
+          <span class="text-2xl font-bold font-mono text-emerald-500">${data.filtered_locally}</span>
         </div>
         <div>
-          <span class="text-xs text-amber-900 dark:text-amber-300 block font-medium">Routed to Backend</span>
-          <span class="text-2xl font-black text-amber-600 dark:text-amber-400 font-mono">${data.routed_to_backend}</span>
+          <span class="text-xs text-amber-500 block font-medium">Routed to Cloud</span>
+          <span class="text-2xl font-bold font-mono text-amber-500">${data.routed_to_backend}</span>
         </div>
         <div>
-          <span class="text-xs text-indigo-900 dark:text-indigo-300 block font-medium">Server Traffic Saved</span>
-          <span class="text-2xl font-black text-indigo-600 dark:text-indigo-400 font-mono">${data.request_reduction_pct}%</span>
+          <span class="text-xs text-indigo-500 block font-medium">Traffic Saved</span>
+          <span class="text-2xl font-bold font-mono text-indigo-500">${data.request_reduction_pct}%</span>
         </div>
       </div>
-      <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-4 overflow-x-auto">
+      <div class="soc-card p-4 overflow-x-auto">
         <table class="w-full text-left text-xs">
-          <thead class="bg-slate-50 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 uppercase font-semibold">
+          <thead class="bg-slate-50 dark:bg-[#151B26] text-slate-500 uppercase font-semibold">
             <tr>
               <th class="px-4 py-2">Message Snippet</th>
-              <th class="px-4 py-2">Routing</th>
+              <th class="px-4 py-2">Routing Decision</th>
               <th class="px-4 py-2">Classification</th>
               <th class="px-4 py-2">Risk Score</th>
               <th class="px-4 py-2">Latency</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-slate-100 dark:divide-slate-800 font-mono text-[11px]">
+          <tbody class="divide-y divide-slate-100 dark:divide-[#1C2433] font-mono text-[11px]">
             ${data.results.map(r => `
               <tr>
                 <td class="px-4 py-2 text-slate-700 dark:text-slate-200 font-sans text-xs">${r.text_snippet}</td>
-                <td class="px-4 py-2 font-semibold ${r.prefilter_routed ? 'text-amber-600 dark:text-amber-400' : 'text-emerald-600 dark:text-emerald-400'}">${r.prefilter_routed ? 'Routed to Cloud' : 'Filtered on Device'}</td>
+                <td class="px-4 py-2 font-semibold ${r.prefilter_routed ? 'text-amber-500' : 'text-emerald-500'}">${r.prefilter_routed ? 'Routed to Cloud' : 'Filtered on Device'}</td>
                 <td class="px-4 py-2 text-slate-800 dark:text-slate-200">${r.classification}</td>
                 <td class="px-4 py-2 text-slate-800 dark:text-slate-200">${r.risk_score.toFixed(0)}</td>
-                <td class="px-4 py-2 text-slate-400 dark:text-slate-500">${r.processing_time_ms.toFixed(1)} ms</td>
+                <td class="px-4 py-2 text-slate-400">${r.processing_time_ms.toFixed(1)} ms</td>
               </tr>
             `).join("")}
           </tbody>
@@ -876,7 +994,67 @@ async function runBatchEvaluation() {
       </div>
     `;
 
+    showToast("Batch traffic benchmark complete", "success");
+
   } catch (err) {
-    container.innerHTML = `<div class="p-4 bg-rose-50 text-rose-700 rounded-xl">Error: ${err.message}</div>`;
+    container.innerHTML = `<div class="p-4 bg-rose-500/10 text-rose-500 rounded-xl text-xs">Error: ${err.message}</div>`;
   }
+}
+
+// =========================================================================
+// Thesis Committee Defense: Scalability Simulator & Preset Scenarios
+// =========================================================================
+
+function updateScalabilitySim() {
+  const usersEl = document.getElementById("sim-users");
+  const rateEl = document.getElementById("sim-rate");
+  if (!usersEl || !rateEl) return;
+
+  const users = parseInt(usersEl.value, 10);
+  const rate = parseInt(rateEl.value, 10);
+
+  document.getElementById("sim-users-val").textContent = `${users.toLocaleString()} users`;
+  document.getElementById("sim-rate-val").textContent = `${rate} notifs/min`;
+
+  // Total raw incoming notifications across users
+  const rawRpm = users * rate;
+  const rawRph = rawRpm * 60;
+
+  // Naive streaming: all raw notifications hit the cloud
+  document.getElementById("sim-naive-rpm").textContent = `${rawRpm.toLocaleString()} req/min`;
+  document.getElementById("sim-naive-rph").textContent = `${rawRph.toLocaleString()} req/hour`;
+
+  // ScamGuard Two-Stage Filtering:
+  // 1. Noise Filter drops ~85% of notifications (Meesho, Amazon, Flipkart, weather, social likes) locally
+  // 2. Local Edge Prefilter evaluates remaining 15% communication messages and keeps 89.96% of benign chats on device
+  const commNotifsRpm = rawRpm * 0.15; // 85% noise dropped
+  const cloudRpm = commNotifsRpm * (1.0 - 0.8996); // ~10% of comm notifs routed
+  const cloudRph = cloudRpm * 60;
+
+  document.getElementById("sim-scamguard-rpm").textContent = `${cloudRpm < 1 ? cloudRpm.toFixed(1) : Math.round(cloudRpm).toLocaleString()} req/min`;
+  document.getElementById("sim-scamguard-rph").textContent = `${Math.round(cloudRph).toLocaleString()} req/hour`;
+}
+
+function loadDefensePreset(type) {
+  const input = document.getElementById("message-input");
+  if (!input) return;
+
+  switch (type) {
+    case "truncated":
+      input.value = "Chase Bank: Unauthorized login attempt from unfamiliar device. To safeguard your account, click http://chase-login-resolve.xyz/ver...";
+      break;
+    case "meesho":
+      input.value = "Meesho Deal: 70% OFF Kurtis & Sarees starting at Rs. 149! Free delivery on first order. Open Meesho app now.";
+      break;
+    case "instagram":
+      input.value = "alex_smith liked your story. See what else they shared today on Instagram.";
+      break;
+    case "friend_chat":
+      input.value = "Hey! Can you send me the lecture slides from today's meeting with Haider sir?";
+      break;
+  }
+
+  // Switch to detector tab and run analysis
+  switchTab("detector");
+  analyzeMessage();
 }

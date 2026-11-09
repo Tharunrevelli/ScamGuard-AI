@@ -17,32 +17,45 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="12dp">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="🛡️ ScamGuard AI"
+                android:text="🛡️ ScamGuard PRO"
                 android:textSize="22sp"
                 android:textStyle="bold"
                 android:textColor="@color/text_primary" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PRIVACY SHIELD"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
+                android:background="#DEF7EC"
+                android:textColor="#03543F" />
         </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Privacy-conscious scam detection. Stage 1 executes on-device to filter benign text; Stage 2 verifies candidates remotely."
+            android:text="Zero-knowledge scam protection. Evaluates background chats 100% on-device; strictly filters e-commerce noise &amp; flags clipped previews."
             android:textSize="12sp"
             android:textColor="@color/text_secondary"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="14dp" />
 
-        <!-- Quick Test Presets -->
+        <!-- Quick Test Presets Row 1 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="12dp">
+            android:layout_marginBottom="6dp">
 
             <Button
                 android:id="@+id/btnPresetPhishing"
@@ -50,7 +63,7 @@
                 android:layout_width="0dp"
                 android:layout_height="36dp"
                 android:layout_weight="1"
-                android:text="Bank Scam"
+                android:text="Bank Phish"
                 android:textSize="11sp"
                 android:textColor="@color/primary"
                 android:background="#EEF2FF"
@@ -68,11 +81,42 @@
                 android:background="#F1F5F9" />
         </LinearLayout>
 
+        <!-- Quick Test Presets Row 2 (Professor Feedback Demonstrations) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="12dp">
+
+            <Button
+                android:id="@+id/btnPresetTruncated"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="36dp"
+                android:layout_weight="1"
+                android:text="Clipped (...)"
+                android:textSize="11sp"
+                android:textColor="#D97706"
+                android:background="#FEF3C7"
+                android:layout_marginEnd="6dp" />
+
+            <Button
+                android:id="@+id/btnPresetEcommerce"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="36dp"
+                android:layout_weight="1"
+                android:text="Meesho / Ad"
+                android:textSize="11sp"
+                android:textColor="#4B5563"
+                android:background="#E5E7EB" />
+        </LinearLayout>
+
         <!-- Message Input -->
         <EditText
             android:id="@+id/editMessageInput"
             android:layout_width="match_parent"
-            android:layout_height="140dp"
+            android:layout_height="120dp"
             android:background="@drawable/input_background"
             android:gravity="top|start"
             android:hint="@string/prompt_input"
@@ -80,64 +124,38 @@
             android:padding="14dp"
             android:textColor="@color/text_primary"
             android:textSize="14sp"
-            android:layout_marginBottom="14dp" />
+            android:layout_marginBottom="12dp" />
 
-        <!-- Controls & Toggles -->
+        <!-- Dual Action Buttons -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@color/card_bg"
-            android:padding="14dp"
-            android:layout_marginBottom="16dp">
-
-            <Switch
-                android:id="@+id/switchRedactPii"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Redact PII on device"
-                android:textSize="13sp"
-                android:checked="true"
-                android:layout_marginBottom="8dp" />
-
-            <Switch
-                android:id="@+id/switchPrefilter"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Stage 1 Local Prefilter"
-                android:textSize="13sp"
-                android:checked="true"
-                android:layout_marginBottom="8dp" />
-
-            <Switch
-                android:id="@+id/switchNotificationListener"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Background WhatsApp / SMS monitoring"
-                android:textSize="13sp"
-                android:checked="true"
-                android:layout_marginBottom="10dp" />
+            android:orientation="horizontal"
+            android:layout_marginBottom="14dp">
 
             <Button
-                android:id="@+id/btnNotificationPermission"
-                android:layout_width="match_parent"
-                android:layout_height="38dp"
-                android:text="Authorize Notification Access"
-                android:textSize="11sp"
-                android:backgroundTint="#F8FAFC"
-                android:textColor="@color/primary" />
-        </LinearLayout>
+                android:id="@+id/btnScanClipboard"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:text="📋 Paste &amp; Scan"
+                android:textColor="@color/primary"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:backgroundTint="#EEF2FF"
+                android:layout_marginEnd="8dp" />
 
-        <!-- Action Button -->
-        <Button
-            android:id="@+id/btnAnalyze"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="@string/action_analyze"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            android:backgroundTint="@color/primary"
-            android:layout_marginBottom="8dp" />
+            <Button
+                android:id="@+id/btnAnalyze"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1.3"
+                android:text="🔍 Threat Analysis"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:backgroundTint="@color/primary" />
+        </LinearLayout>
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -154,9 +172,122 @@
             android:gravity="center"
             android:textSize="12sp"
             android:textColor="@color/text_secondary"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="12dp" />
 
-        <!-- History & Settings Section -->
+        <!-- Privacy & Scalability Controls -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/card_bg"
+            android:padding="14dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="PRIVACY &amp; NOISE ARCHITECTURE"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:textColor="@color/primary"
+                android:layout_marginBottom="8dp" />
+
+            <Switch
+                android:id="@+id/switchPrivacyShield"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Local Privacy Shield (100% On-Device, 0 Server Calls)"
+                android:textSize="12sp"
+                android:checked="true"
+                android:layout_marginBottom="6dp" />
+
+            <Switch
+                android:id="@+id/switchRedactPii"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Client-Side PII Redaction (Phone / Card / Email)"
+                android:textSize="12sp"
+                android:checked="true"
+                android:layout_marginBottom="6dp" />
+
+            <Switch
+                android:id="@+id/switchNotificationListener"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Background Interception Active"
+                android:textSize="12sp"
+                android:checked="true"
+                android:layout_marginBottom="10dp" />
+
+            <!-- Granular App Whitelist Controls -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Monitored Communication Channels:"
+                android:textSize="11sp"
+                android:textColor="@color/text_secondary"
+                android:layout_marginBottom="6dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/checkWhatsApp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="WhatsApp"
+                    android:textSize="11sp"
+                    android:checked="true" />
+
+                <CheckBox
+                    android:id="@+id/checkSms"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="SMS / RCS"
+                    android:textSize="11sp"
+                    android:checked="true" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dp">
+
+                <CheckBox
+                    android:id="@+id/checkTelegram"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Telegram"
+                    android:textSize="11sp"
+                    android:checked="true" />
+
+                <CheckBox
+                    android:id="@+id/checkEmail"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Gmail"
+                    android:textSize="11sp"
+                    android:checked="true" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnNotificationPermission"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:text="Authorize Notification Access"
+                android:textSize="11sp"
+                android:backgroundTint="#F8FAFC"
+                android:textColor="@color/primary" />
+        </LinearLayout>
+
+        <!-- History Section -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -196,7 +327,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Backend API Base URL"
+            android:text="Cloud API Endpoint (Used for Deep Forensic Scan)"
             android:textSize="12sp"
             android:textStyle="bold"
             android:textColor="@color/text_secondary"
@@ -210,7 +341,7 @@
             android:padding="10dp"
             android:textSize="12sp"
             android:fontFamily="monospace"
-            android:text="http://10.0.2.2:8000/api/v1" />
+            android:text="http://172.22.107.154:8000/api/v1" />
 
     </LinearLayout>
 

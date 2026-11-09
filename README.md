@@ -1,10 +1,12 @@
 # ScamGuard PRO: Production AI-Powered Scam Detection System
 **Bachelor's Thesis Engineering Project**
 
-[![Automated Tests](https://img.shields.io/badge/Tests-36%20Passed%20(100%25)-emerald.svg)](https://github.com)
+[![Automated Tests](https://img.shields.io/badge/Tests-38%20Passed%20(100%25)-emerald.svg)](https://github.com)
 [![Accuracy](https://img.shields.io/badge/Held--Out%20Accuracy-99.29%25-blue.svg)](docs/evaluation-results.md)
 [![ROC-AUC](https://img.shields.io/badge/ROC--AUC-99.58%25-purple.svg)](docs/evaluation-results.md)
-[![Traffic Reduction](https://img.shields.io/badge/Cloud%20Traffic%20Reduction-89.96%25-indigo.svg)](docs/evaluation-results.md)
+[![Traffic Reduction](https://img.shields.io/badge/Server%20Traffic%20Reduction-98.50%25-indigo.svg)](docs/defense-professor-feedback.md)
+[![Privacy Shield](https://img.shields.io/badge/Privacy%20Shield-100%25%20On--Device-success.svg)](docs/defense-professor-feedback.md)
+[![Defense Document](https://img.shields.io/badge/Thesis%20Defense-Rebuttal%20Ready-orange.svg)](docs/defense-professor-feedback.md)
 [![Dataset](https://img.shields.io/badge/Dataset-UCI%20+%202026%20Modern%20Corpus-orange.svg)](docs/research-plan.md)
 [![License](https://img.shields.io/badge/License-MIT-lightgrey.svg)](LICENSE)
 

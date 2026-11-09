@@ -121,13 +121,22 @@ async def detect_message(payload: DetectionRequest, request: Request):
         latency_ms=round(elapsed_ms, 2)
     )
 
+    # Truncation check
+    is_truncated, truncation_warning = default_local_prefilter.check_truncation(processed_text)
+    reasons_list = list(hybrid_result["reasons"])
+    actions_list = list(hybrid_result["suggested_actions"])
+
+    if is_truncated:
+        reasons_list.append("Notice: Notification or input text appears truncated. Ensure full message is submitted via Share Sheet or Manual Paste for exhaustive confidence.")
+        actions_list.insert(0, "Verify full unclipped message via Share Sheet or Manual Paste.")
+
     return DetectionResponse(
         request_id=request_id,
         classification=hybrid_result["classification"],
         risk_score=hybrid_result["risk_score"],
         confidence=hybrid_result["confidence"],
-        reasons=hybrid_result["reasons"],
-        suggested_actions=hybrid_result["suggested_actions"],
+        reasons=reasons_list,
+        suggested_actions=actions_list,
         indicators=indicators_formatted,
         breakdown=hybrid_result["breakdown"],
         model_version=ml_result["model_version"],
@@ -139,6 +148,8 @@ async def detect_message(payload: DetectionRequest, request: Request):
         url_intelligence=hybrid_result.get("url_intelligence"),
         annotated_message=hybrid_result.get("annotated_message"),
         token_attributions=hybrid_result.get("token_attributions"),
+        is_truncated=is_truncated,
+        truncation_warning=truncation_warning,
     )
 
 

@@ -6,7 +6,7 @@ from typing import List, Optional, Dict, Any, Literal
 from pydantic import BaseModel, Field, field_validator
 
 
-MessageSource = Literal["MANUAL", "NOTIFICATION", "SHARE_SHEET", "CLIPBOARD", "BENCHMARK"]
+MessageSource = Literal["MANUAL", "NOTIFICATION", "SHARE_SHEET", "CLIPBOARD", "BENCHMARK", "SMS"]
 ClassificationTier = Literal["Likely Safe", "Suspicious", "Likely Scam", "Unable to Determine"]
 
 
@@ -59,6 +59,8 @@ class DetectionResponse(BaseModel):
     url_intelligence: Optional[Dict[str, Any]] = None
     annotated_message: Optional[Dict[str, Any]] = None
     token_attributions: Optional[List[Dict[str, Any]]] = None
+    is_truncated: bool = False
+    truncation_warning: Optional[str] = None
 
 
 class PrefilterCheckRequest(BaseModel):

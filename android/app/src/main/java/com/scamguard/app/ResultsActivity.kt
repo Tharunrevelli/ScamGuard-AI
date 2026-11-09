@@ -2,6 +2,7 @@ package com.scamguard.app
 
 import android.graphics.Color
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -9,7 +10,8 @@ import androidx.appcompat.app.AppCompatActivity
 
 /**
  * Detection Results Screen.
- * Displays 4-tier classification, risk score, explanations, and safety recommendations.
+ * Displays 4-tier classification, risk score, explanations, safety recommendations,
+ * and prominent truncation warnings for clipped message previews.
  */
 class ResultsActivity : AppCompatActivity() {
 
@@ -22,7 +24,9 @@ class ResultsActivity : AppCompatActivity() {
         val confidence = intent.getDoubleExtra("EXTRA_CONFIDENCE", 0.0)
         val reasons = intent.getStringArrayListExtra("EXTRA_REASONS") ?: arrayListOf()
         val actions = intent.getStringArrayListExtra("EXTRA_ACTIONS") ?: arrayListOf()
+        val isTruncated = intent.getBooleanExtra("EXTRA_IS_TRUNCATED", false)
 
+        val textTruncationBanner = findViewById<TextView>(R.id.textTruncationBanner)
         val textClassification = findViewById<TextView>(R.id.textClassification)
         val textRiskScore = findViewById<TextView>(R.id.textRiskScore)
         val textConfidence = findViewById<TextView>(R.id.textConfidence)
@@ -31,6 +35,12 @@ class ResultsActivity : AppCompatActivity() {
         val btnDone = findViewById<Button>(R.id.btnDone)
         val btnFeedbackAccurate = findViewById<Button>(R.id.btnFeedbackAccurate)
         val btnFeedbackFalse = findViewById<Button>(R.id.btnFeedbackFalse)
+
+        if (isTruncated) {
+            textTruncationBanner.visibility = View.VISIBLE
+        } else {
+            textTruncationBanner.visibility = View.GONE
+        }
 
         textClassification.text = classification
         textRiskScore.text = "Risk Index: ${riskScore.toInt()} / 100"

@@ -1,367 +1,599 @@
-/* Modern Production-Grade Cybersecurity SOC Enhancements for ScamGuard AI */
+/* ==========================================================================
+   ScamGuard PRO — Enterprise Cybersecurity SOC Design System
+   World-Class Threat Intelligence Platform (Linear / Stripe Radar Aesthetic)
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+
 :root {
-  --primary: #6366f1;
-  --primary-hover: #4f46e5;
-  --accent-cyan: #06b6d4;
-  --threat-critical: #ef4444;
-  --threat-high: #f97316;
-  --threat-medium: #eab308;
+  --bg-canvas: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-card-hover: #ffffff;
+  --bg-inset: #f1f5f9;
+  --border-subtle: #e2e8f0;
+  --border-strong: #cbd5e1;
+  --border-glow: rgba(99, 102, 241, 0.25);
+
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --text-dim: #94a3b8;
+
+  --accent-brand: #4f46e5;
+  --accent-brand-hover: #4338ca;
+  --accent-brand-glow: rgba(79, 70, 229, 0.25);
+
+  --threat-crit: #e11d48;
+  --threat-critical: #e11d48;
+  --threat-crit-glow: rgba(225, 29, 72, 0.2);
+  --threat-warn: #f59e0b;
+  --threat-medium: #f59e0b;
+  --threat-warn-glow: rgba(245, 158, 11, 0.2);
   --threat-safe: #10b981;
+  --threat-safe-glow: rgba(16, 185, 129, 0.2);
+  --threat-neutral: #8b5cf6;
+  --threat-undetermined: #8b5cf6;
+}
+
+.dark {
+  --bg-canvas: #06080d;
+  --bg-card: #0c1017;
+  --bg-card-hover: #111722;
+  --bg-inset: #070a0f;
+  --border-subtle: #17202e;
+  --border-strong: #222f44;
+  --border-glow: rgba(99, 102, 241, 0.35);
+
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+
+  --accent-brand: #6366f1;
+  --accent-brand-hover: #818cf8;
+  --accent-brand-glow: rgba(99, 102, 241, 0.35);
+
+  --threat-crit: #f43f5e;
+  --threat-critical: #f43f5e;
+  --threat-crit-glow: rgba(244, 63, 94, 0.25);
+  --threat-warn: #fbbf24;
+  --threat-medium: #fbbf24;
+  --threat-warn-glow: rgba(251, 191, 36, 0.25);
+  --threat-safe: #10b981;
+  --threat-safe-glow: rgba(16, 185, 129, 0.25);
+  --threat-neutral: #a78bfa;
+  --threat-undetermined: #a78bfa;
+}
+
+/* ==========================================================================
+   Base Layout & Ambient Lighting
+   ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  transition: background-color 0.25s ease, color 0.25s ease;
+  background-color: var(--bg-canvas);
+  color: var(--text-main);
+  min-height: 100vh;
+  transition: background-color 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              color 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow-x: hidden;
 }
 
-/* Glassmorphism card surfaces */
-.glass-panel {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(12px);
-}
-.dark .glass-panel {
-  background: rgba(15, 23, 42, 0.85);
-  backdrop-filter: blur(12px);
+.font-mono {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
 }
 
-/* Navigation button */
-.nav-btn {
-  padding: 0.5rem 0.85rem;
-  border-radius: 0.75rem;
+/* Ambient Subtle Radial Glow Effect */
+.ambient-glow {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1000px;
+  height: 400px;
+  background: radial-gradient(circle 500px at 50% -50px, rgba(99, 102, 241, 0.12), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.dark .ambient-glow {
+  background: radial-gradient(circle 600px at 50% -50px, rgba(99, 102, 241, 0.16), transparent 75%);
+}
+
+/* Cyber Grid Surface */
+.cyber-grid {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(148, 163, 184, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(148, 163, 184, 0.04) 1px, transparent 1px);
+}
+.dark .cyber-grid {
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* ==========================================================================
+   Enterprise SOC Cards & Workbench
+   ========================================================================== */
+.soc-terminal {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.25);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.soc-terminal:hover {
+  border-color: var(--border-strong);
+}
+
+.soc-terminal-header {
+  background: var(--bg-inset);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.soc-window-dots {
+  display: flex;
+  gap: 6px;
+}
+.soc-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.soc-dot-red { background: #ef4444; opacity: 0.8; }
+.soc-dot-yellow { background: #f59e0b; opacity: 0.8; }
+.soc-dot-green { background: #10b981; opacity: 0.8; }
+
+.soc-card-inset {
+  background: var(--bg-inset);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+}
+
+/* ==========================================================================
+   Segmented Navigation Tabs
+   ========================================================================== */
+.soc-tabs-pill {
+  background: var(--bg-inset);
+  border: 1px solid var(--border-subtle);
+  padding: 3px;
+  border-radius: 12px;
+  display: inline-flex;
+  gap: 3px;
+}
+
+.tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 14px;
+  border-radius: 9px;
   font-size: 0.8125rem;
   font-weight: 500;
-  color: #64748b;
-  transition: all 0.15s ease;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   white-space: nowrap;
 }
 
-.nav-btn:hover {
-  color: #0f172a;
-  background-color: #f1f5f9;
+.tab-btn:hover {
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.05);
 }
 
-.nav-btn.active {
-  color: #4f46e5;
-  background-color: #eef2ff;
+.tab-btn.active {
+  color: #ffffff;
+  background: var(--accent-brand);
   font-weight: 600;
+  box-shadow: 0 2px 10px -1px var(--accent-brand-glow);
 }
 
-/* Dark mode Nav buttons */
-.dark .nav-btn {
-  color: #94a3b8;
-}
-
-.dark .nav-btn:hover {
-  color: #f8fafc;
-  background-color: #1e293b;
-}
-
-.dark .nav-btn.active {
-  color: #a5b4fc;
-  background-color: rgba(99, 102, 241, 0.15);
-  font-weight: 600;
-  box-shadow: inset 0 0 0 1px rgba(99, 102, 241, 0.25);
-}
-
-/* Tabs */
 .tab-content {
   display: none;
 }
-
 .tab-content.active {
   display: block;
-  animation: fadeIn 0.2s ease-in-out;
+  animation: tabFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(4px); }
+@keyframes tabFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Chip buttons for presets */
-.chip-btn {
-  background-color: #ffffff;
-  border: 1px solid #cbd5e1;
-  color: #334155;
-  padding: 0.25rem 0.65rem;
-  border-radius: 0.5rem;
+/* ==========================================================================
+   Preset Chips & Forensic Indicators
+   ========================================================================== */
+.scenario-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px;
+  background: var(--bg-inset);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
   font-size: 0.75rem;
   font-weight: 500;
-  transition: all 0.15s ease;
-}
-
-.chip-btn:hover {
-  border-color: #6366f1;
-  color: #6366f1;
-  background-color: #f8fafc;
-}
-
-.dark .chip-btn {
-  background-color: #1e293b;
-  border-color: #334155;
-  color: #cbd5e1;
-}
-
-.dark .chip-btn:hover {
-  border-color: #818cf8;
-  color: #818cf8;
-  background-color: #0f172a;
-}
-
-/* Checkbox Toggle */
-.toggle-checkbox {
-  width: 2.25rem;
-  height: 1.25rem;
-  appearance: none;
-  background-color: #cbd5e1;
-  border-radius: 9999px;
-  position: relative;
+  color: var(--text-muted);
   cursor: pointer;
-  outline: none;
-  transition: background-color 0.2s ease;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.dark .toggle-checkbox {
-  background-color: #475569;
+.scenario-chip:hover {
+  border-color: var(--accent-brand);
+  color: var(--text-main);
+  background: var(--bg-card);
+  transform: translateY(-1px);
 }
 
-.toggle-checkbox::before {
-  content: "";
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 1rem;
-  height: 1rem;
-  border-radius: 9999px;
-  background-color: white;
-  transition: transform 0.2s ease;
+.scenario-chip.active {
+  border-color: var(--accent-brand);
+  background: rgba(99, 102, 241, 0.12);
+  color: var(--accent-brand);
+  font-weight: 600;
 }
 
-.toggle-checkbox:checked {
-  background-color: #4f46e5;
-}
-
-.dark .toggle-checkbox:checked {
-  background-color: #6366f1;
-}
-
-.toggle-checkbox:checked::before {
-  transform: translateX(1rem);
-}
-
-/* Spinner */
-.spinner {
-  display: inline-block;
-  width: 1rem;
-  height: 1rem;
-  border: 2px solid rgba(255, 255, 255, 0.3);
+/* ==========================================================================
+   Radar Scanner Empty State Graphic
+   ========================================================================== */
+.radar-scanner-box {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  margin: 0 auto;
   border-radius: 50%;
-  border-top-color: #fff;
-  animation: spin 0.8s linear infinite;
+  border: 1px solid var(--border-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
 }
 
-@keyframes spin {
+.radar-circle-1 {
+  position: absolute;
+  width: 95px;
+  height: 95px;
+  border-radius: 50%;
+  border: 1px dashed var(--border-subtle);
+}
+
+.radar-circle-2 {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 1px solid var(--border-subtle);
+}
+
+.radar-sweep {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, rgba(99, 102, 241, 0.35) 0deg, transparent 60deg, transparent 360deg);
+  animation: radarRotate 3s linear infinite;
+}
+
+@keyframes radarRotate {
+  from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
 
-/* Circular Gauge */
+/* ==========================================================================
+   Primary Action Button (Tactile Glow)
+   ========================================================================== */
+.btn-execute-scan {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, var(--accent-brand) 0%, #4338ca 100%);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.875rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 15px -2px var(--accent-brand-glow);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-execute-scan:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px -2px var(--accent-brand-glow);
+  filter: brightness(1.05);
+}
+
+.btn-execute-scan:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-execute-scan:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* ==========================================================================
+   Security Verdict Banner & Radial Gauge
+   ========================================================================== */
+.verdict-hud {
+  border-radius: 14px;
+  padding: 20px 24px;
+  border: 1px solid;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.verdict-hud-scam {
+  background: linear-gradient(135deg, var(--threat-crit-glow) 0%, transparent 60%), var(--bg-card);
+  border-color: rgba(244, 63, 94, 0.35);
+}
+
+.verdict-hud-warn {
+  background: linear-gradient(135deg, var(--threat-warn-glow) 0%, transparent 60%), var(--bg-card);
+  border-color: rgba(251, 191, 36, 0.35);
+}
+
+.verdict-hud-safe {
+  background: linear-gradient(135deg, var(--threat-safe-glow) 0%, transparent 60%), var(--bg-card);
+  border-color: rgba(16, 185, 129, 0.35);
+}
+
+.verdict-hud-neutral {
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.15) 0%, transparent 60%), var(--bg-card);
+  border-color: rgba(167, 139, 250, 0.35);
+}
+
+/* High-Precision Circular SVG Gauge */
 .gauge-svg {
   transform: rotate(-90deg);
 }
 
 .gauge-circle-bg {
-  stroke: #e2e8f0;
-}
-.dark .gauge-circle-bg {
-  stroke: #1e293b;
+  stroke: var(--border-subtle);
 }
 
 .gauge-circle-progress {
-  stroke-dasharray: 283;
-  stroke-dashoffset: 283;
-  transition: stroke-dashoffset 0.8s ease, stroke 0.4s ease;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              stroke 0.4s ease;
 }
 
-/* Badges */
-.badge-neutral {
-  background-color: #f1f5f9;
-  color: #475569;
-  border: 1px solid #e2e8f0;
-  padding: 0.15rem 0.5rem;
-  border-radius: 9999px;
-  font-weight: 600;
+/* ==========================================================================
+   Visual Threat Inspector (Annotated Message Debugger View)
+   ========================================================================== */
+.inspector-code-box {
+  background: var(--bg-inset);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 16px;
+  font-family: inherit;
+  line-height: 1.8;
 }
 
-.dark .badge-neutral {
-  background-color: #1e293b;
-  color: #cbd5e1;
-  border-color: #334155;
-}
-
-/* Threat Spans & Annotated Message View */
 .threat-token {
   position: relative;
   display: inline-block;
+  padding: 1px 7px;
   margin: 1px 2px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
   border-bottom: 2px solid;
-  transition: all 0.15s ease;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .threat-token:hover {
-  filter: brightness(1.2);
   transform: translateY(-1px);
+  filter: brightness(1.2);
 }
 
-/* Vector progress bars */
-.vector-bar-bg {
-  background-color: #e2e8f0;
-  height: 0.5rem;
+/* Threat Token Styling */
+.threat-token.bg-rose-500\/25, .threat-token[data-severity="CRITICAL"] {
+  background-color: rgba(244, 63, 94, 0.16);
+  border-color: var(--threat-crit);
+  color: var(--threat-crit);
+}
+
+.threat-token.bg-amber-500\/25, .threat-token[data-severity="HIGH"] {
+  background-color: rgba(251, 146, 60, 0.16);
+  border-color: #fb923c;
+  color: #fb923c;
+}
+
+.threat-token.bg-yellow-500\/20, .threat-token[data-severity="MEDIUM"] {
+  background-color: rgba(251, 191, 36, 0.16);
+  border-color: var(--threat-warn);
+  color: var(--threat-warn);
+}
+
+.threat-token.bg-indigo-500\/20, .threat-token[data-severity="LOW"] {
+  background-color: rgba(99, 102, 241, 0.16);
+  border-color: var(--accent-brand);
+  color: var(--accent-brand);
+}
+
+/* ==========================================================================
+   Multi-Vector Segmented Progress Track
+   ========================================================================== */
+.vector-track {
+  background: var(--bg-inset);
+  height: 6px;
   border-radius: 9999px;
   overflow: hidden;
-}
-.dark .vector-bar-bg {
-  background-color: #1e293b;
+  border: 1px solid var(--border-subtle);
 }
 
-.vector-bar-fill {
+.vector-fill, .vector-bar {
   height: 100%;
   border-radius: 9999px;
-  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: width 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Indicator items */
-.indicator-card {
-  padding: 0.75rem;
-  border-radius: 0.75rem;
-  border: 1px solid #e2e8f0;
-  font-size: 0.75rem;
-  transition: all 0.15s ease;
+/* Banner Aliases */
+.assessment-banner {
+  border-radius: 14px;
+  padding: 20px 24px;
+  border: 1px solid;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.banner-scam {
+  background: linear-gradient(135deg, var(--threat-crit-glow) 0%, transparent 60%), var(--bg-card);
+  border-color: rgba(244, 63, 94, 0.35);
+}
+.banner-suspicious {
+  background: linear-gradient(135deg, var(--threat-warn-glow) 0%, transparent 60%), var(--bg-card);
+  border-color: rgba(251, 191, 36, 0.35);
+}
+.banner-safe {
+  background: linear-gradient(135deg, var(--threat-safe-glow) 0%, transparent 60%), var(--bg-card);
+  border-color: rgba(16, 185, 129, 0.35);
+}
+.banner-undetermined {
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.15) 0%, transparent 60%), var(--bg-card);
+  border-color: rgba(167, 139, 250, 0.35);
 }
 
-.indicator-card.severity-CRITICAL {
-  background-color: #fef2f2;
-  border-color: #fecaca;
-  color: #991b1b;
+/* ==========================================================================
+   Toast Notification Stack
+   ========================================================================== */
+#toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
 }
 
-.indicator-card.severity-HIGH {
-  background-color: #fff7ed;
-  border-color: #fed7aa;
-  color: #9a3412;
+.toast {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+  font-size: 0.8125rem;
+  color: var(--text-main);
+  transform: translateY(20px);
+  opacity: 0;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  min-width: 280px;
+  max-width: 400px;
 }
 
-.indicator-card.severity-MEDIUM {
-  background-color: #fefce8;
-  border-color: #fef08a;
-  color: #854d0e;
+.toast.show {
+  transform: translateY(0);
+  opacity: 1;
 }
 
-.indicator-card.severity-LOW {
-  background-color: #f0fdf4;
-  border-color: #bbf7d0;
-  color: #166534;
+.toast-success { border-left: 4px solid var(--threat-safe); }
+.toast-error { border-left: 4px solid var(--threat-crit); }
+.toast-info { border-left: 4px solid var(--accent-brand); }
+
+/* ==========================================================================
+   Modal Overlay
+   ========================================================================== */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(6, 8, 13, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Dark mode Indicator Cards */
-.dark .indicator-card.severity-CRITICAL {
-  background-color: rgba(153, 27, 27, 0.2);
-  border-color: #7f1d1d;
-  color: #fca5a5;
+.modal-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
 }
 
-.dark .indicator-card.severity-HIGH {
-  background-color: rgba(154, 52, 18, 0.2);
-  border-color: #7c2d12;
-  color: #fdba74;
+.modal-content {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-strong);
+  border-radius: 18px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+  width: 100%;
+  max-width: 700px;
+  max-height: 90vh;
+  overflow-y: auto;
+  transform: scale(0.96) translateY(10px);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.dark .indicator-card.severity-MEDIUM {
-  background-color: rgba(133, 77, 14, 0.2);
-  border-color: #713f12;
-  color: #fde047;
+.modal-backdrop.open .modal-content {
+  transform: scale(1) translateY(0);
 }
 
-.dark .indicator-card.severity-LOW {
-  background-color: rgba(22, 101, 52, 0.2);
-  border-color: #14532d;
-  color: #86efac;
+/* Spinner */
+.spinner-ring {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  border-top-color: #ffffff;
+  animation: spinRing 0.7s linear infinite;
 }
 
-/* Feedback Buttons */
-.feedback-btn {
-  font-size: 0.75rem;
-  font-weight: 500;
-  padding: 0.35rem 0.65rem;
-  border-radius: 0.5rem;
-  background-color: #f8fafc;
-  border: 1px solid #e2e8f0;
-  color: #475569;
-  transition: all 0.15s ease;
+@keyframes spinRing {
+  to { transform: rotate(360deg); }
 }
 
-.dark .feedback-btn {
-  background-color: #1e293b;
-  border-color: #334155;
-  color: #cbd5e1;
-}
-
-.dark .feedback-btn:hover {
-  background-color: #334155;
-  color: #f8fafc;
-}
-
-/* Tier Banners */
-.tier-safe {
-  background-color: #f0fdf4;
-  border-color: #bbf7d0;
-  color: #14532d;
-}
-
-.tier-suspicious {
-  background-color: #fffbeb;
-  border-color: #fde68a;
-  color: #78350f;
-}
-
-.tier-scam {
-  background-color: #fef2f2;
-  border-color: #fecaca;
-  color: #7f1d1d;
-}
-
-.tier-undetermined {
-  background-color: #f8fafc;
-  border-color: #e2e8f0;
-  color: #334155;
-}
-
-/* Dark mode Tier Banners */
-.dark .tier-safe {
-  background-color: rgba(20, 83, 45, 0.25);
-  border-color: rgba(34, 197, 94, 0.35);
-  color: #4ade80;
-}
-
-.dark .tier-suspicious {
-  background-color: rgba(120, 53, 15, 0.25);
-  border-color: rgba(245, 158, 11, 0.35);
-  color: #fbbf24;
-}
-
-.dark .tier-scam {
-  background-color: rgba(127, 29, 29, 0.3);
-  border-color: rgba(239, 68, 68, 0.35);
-  color: #f87171;
-}
-
-.dark .tier-undetermined {
-  background-color: #1e293b;
-  border-color: #334155;
-  color: #cbd5e1;
-}
-
-/* Modal for Forensic Report */
-.modal-overlay {
-  background-color: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(4px);
+/* Print Stylesheet */
+@media print {
+  body { background: #ffffff !important; color: #000000 !important; }
+  header, footer, nav, button, #theme-toggle { display: none !important; }
+  .soc-terminal, .modal-content { border: 1px solid #ddd !important; box-shadow: none !important; }
 }

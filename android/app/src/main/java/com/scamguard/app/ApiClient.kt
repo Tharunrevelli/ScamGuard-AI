@@ -14,7 +14,7 @@ import java.net.UnknownHostException
  * Mobile-to-Backend HTTP API Client.
  * Connects Android app to FastAPI backend with strict timeouts and robust offline handling.
  */
-class ApiClient(private val baseUrl: String = "http://10.0.2.2:8000/api/v1") {
+class ApiClient(private val baseUrl: String = "http://172.22.107.154:8000/api/v1") {
 
     sealed class Result<out T> {
         data class Success<out T>(val data: T) : Result<T>()

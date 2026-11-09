@@ -1,0 +1,47 @@
+# Conversation Transcription: Professor Feedback on Project
+
+**Audio/Video Source:** conversation.mp4  
+**Date:** November 9, 2026  
+**Participants:** Professor, Student
+
+---
+
+### Transcript:
+
+**[00:00 - 01:25]**  
+**Professor:** Defend that this is a good assumption. Understand? That is the first thing.  
+Second thing: Even if we assume that we are dealing with a person who has not switched off any notification, that person... that is essentially going to be even more problematic. Why? Because like my wife, in my wife's phone, at any point of time if I take it up, there are like 10 different things: two from Instagram, three from Meesho, two from Amazon, one WhatsApp, right?  
+Now what happens? In your app, each and every notification has to be sent to the server. Right?  
+Now imagine if you even have 100 people, and they are getting like five notifications per minute on an average, you are getting 500 requests per minute on your app. Out of which maybe only 10 or 15 are actual emails and messages. There might be other things coming up, right? Amazon ad, Flipkart ad, Meesho app, weather update, Instagram somebody logged in, somebody liked your status. You understand?  
+This solution is not scalable. Scalable, do you understand?  
+Basically, first of all, this is you are yourself breaching the privacy of the user. Because you are taking each and every piece of text to the server.
+
+**[01:25 - 01:32]**  
+*(Student checks phone / notes)*
+
+**[01:32 - 02:26]**  
+**Professor:** See, your committee also is very hard, right? Ayan and Haider Vanka sir.  
+**Student:** Ayan and Haider Vanka sir...  
+**Professor:** You understand? It's very difficult...  
+**Student:** I know, sir. Difficult to face them.  
+**Professor:** Haan, right? And if you say these things, they'll actually scold you like anything. That is why from day one I was telling you, right? See, at the end, I can just stand embarrassed in front of them, but that's it. My embarrassment is 15 minutes. After that, you are the one who will suffer.  
+**Student:** Sir, presentation committee... in front of everyone?  
+**Professor:** Haan, three people panel: me, Haider sir, and Ma'am.  
+**Student:** Those two people are very scary, sir.  
+**Professor:** So that is what I was telling you, it's not that easy.  
+**Student:** When is it?  
+**Professor:** Now the schedule is being prepared.
+
+**[02:27 - 03:32]**  
+*(Brief pause / background discussion)*
+
+**[03:33 - 04:30]**  
+**Professor:** Right, so:  
+1. **First:** Notifications are not safe; you may not get the complete content, content might be clipped.  
+2. **Second:** It is not scalable. You call your server far too many times. Each and every notification for each and every user, you will make a call to your server. It will not scale.  
+3. **And third one is:** There is a privacy problem. This is the most stark. I'm getting some message from some friend, you are reading the message and sending it to your API. That is the most problematic thing about this app. Because you understand, this is a scam detection app! You are trying to to stop people from fooling you, and you are taking all my data!  
+**Student:** Yes sir, I will change some of... Yes sir.  
+**Professor:** Okay?  
+**Student:** Yes sir, I will change, sir.  
+**Professor:** So I have already told you. Now you do whatever you want. If you want to meet me, you can certainly come, but I have already told you whatever I could.  
+**Student:** Okay sir.
