@@ -151,3 +151,13 @@ python -m uvicorn backend.app.main:app --host 0.0.0.0 --port 8000
    - Demonstrate the verified **80-90% traffic reduction** achieved by Stage 1 edge prefiltering.
 5. **Research Evaluation Benchmark:**
    - Switch to the **Research Benchmark** tab to review the empirical 4-model comparison table ($n=1,124$) addressing the professor's constraints.
+
+---
+
+## 7. Cross-Platform Testing & iOS Support
+
+For testing on Apple iOS devices (iPhone / iPad) and detailed analysis of Apple's sandbox architecture vs. Android permissions, refer to the [iOS Testing Guide](docs/ios_testing_guide.md).
+
+- **Instant iOS Testing (Safari PWA):** Run the backend with `--host 0.0.0.0` and open `http://<YOUR_PC_IP>:8000` in Mobile Safari. Tap *Share -> Add to Home Screen* to run as a full-screen iOS app.
+- **System Integration (Apple Shortcuts):** Build a 3-step native iOS Shortcut using `Shortcuts.app` to scan highlighted text or shared links via the `/api/v1/detect` REST endpoint.
+- **Native iOS Production Design:** Details Apple's official `IdentityLookup` framework (`ILMessageFilterExtension`) for native SMS spam filtering and CoreML Apple Neural Engine acceleration.

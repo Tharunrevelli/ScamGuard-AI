@@ -20,6 +20,13 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 # 3. Launch Backend & Web Server
-Write-Host "[3/3] Launching ScamGuard Backend & Web Dashboard on http://localhost:8000..." -ForegroundColor Green
+$localIP = (Get-NetIPAddress -AddressFamily IPv4 | Where-Object { $_.InterfaceAlias -notlike "*Loopback*" -and $_.IPAddress -notlike "169.254*" } | Select-Object -First 1).IPAddress
+if (-not $localIP) { $localIP = "127.0.0.1" }
+
+Write-Host "[3/3] Launching ScamGuard Backend & Web Dashboard..." -ForegroundColor Green
+Write-Host "  -> Local Browser:       http://localhost:8000" -ForegroundColor Cyan
+Write-Host "  -> Mobile / iOS Safari:  http://${localIP}:8000" -ForegroundColor Yellow
+Write-Host "     (Open on iPhone/iPad connected to the same Wi-Fi)" -ForegroundColor Gray
+
 Start-Process "http://localhost:8000"
-python -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000
+python -m uvicorn backend.app.main:app --host 0.0.0.0 --port 8000
