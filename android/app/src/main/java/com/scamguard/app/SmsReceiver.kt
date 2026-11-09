@@ -94,7 +94,7 @@ class SmsReceiver : BroadcastReceiver() {
         val pendingResult = goAsync()
         executor.execute {
             try {
-                val serverUrl = prefs.getString("backend_url", "http://172.22.107.154:8000/api/v1") ?: "http://172.22.107.154:8000/api/v1"
+                val serverUrl = prefs.getString("backend_url", "http://172.22.107.83:8000/api/v1") ?: "http://172.22.107.83:8000/api/v1"
                 val client = ApiClient(serverUrl)
 
                 val redaction = privacyRedactor.redact(combinedMessage)

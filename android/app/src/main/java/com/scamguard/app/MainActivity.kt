@@ -232,7 +232,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun performAnalysis(rawText: String, source: String) {
         val prefs = getSharedPreferences("scamguard_settings", Context.MODE_PRIVATE)
-        val serverUrl = editBackendUrl.text.toString().trim().ifEmpty { "http://172.22.107.154:8000/api/v1" }
+        val serverUrl = editBackendUrl.text.toString().trim().ifEmpty { "http://172.22.107.83:8000/api/v1" }
         prefs.edit().putString("backend_url", serverUrl).apply()
 
         val usePrivacyShield = switchPrivacyShield.isChecked
@@ -397,7 +397,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadSettings() {
         val prefs = getSharedPreferences("scamguard_settings", Context.MODE_PRIVATE)
-        editBackendUrl.setText(prefs.getString("backend_url", "http://172.22.107.154:8000/api/v1"))
+        editBackendUrl.setText(prefs.getString("backend_url", "http://172.22.107.83:8000/api/v1"))
         switchPrivacyShield.isChecked = prefs.getBoolean("enable_local_privacy_shield", true)
         switchNotificationListener.isChecked = prefs.getBoolean("enable_notification_monitoring", true)
         checkWhatsApp.isChecked = prefs.getBoolean("monitor_whatsapp", true)
