@@ -1058,3 +1058,102 @@ function loadDefensePreset(type) {
   switchTab("detector");
   analyzeMessage();
 }
+
+async function runLiveFloodTest() {
+  const btn = document.getElementById("btn-run-flood-test");
+  const panel = document.getElementById("flood-metrics-panel");
+  const container = document.getElementById("flood-results-container");
+
+  if (!btn) return;
+  btn.disabled = true;
+  btn.innerHTML = `<span>⏳</span><span>Processing 200 Events...</span>`;
+
+  try {
+    const whatsappSamples = [
+      "Hey! Are you still free for dinner tonight?",
+      "URGENT: Chase Bank alert! Account suspended. Verify at https://chase-security-verify.xyz immediately.",
+      "Can you send me the lecture notes from today?",
+      "Your verification code is 492810. Do not share with anyone.",
+      "Sounds good, see you later!"
+    ];
+
+    const telegramMessages = [
+      "Winner! You won the UK Lottery! Claim your £500,000 jackpot now.",
+      "Hey, let's meet at 5pm outside.",
+      "SECURITY NOTICE: Wells Fargo account suspended. Visit http://192.168.1.10/verify.",
+      "Thanks for sharing the document.",
+      "Claim your free $500 gift card at bit.ly/free-gift-promo"
+    ];
+
+    const messages = [];
+    const packages = [];
+
+    // Generate 100 from WhatsApp and 100 from Telegram = 200 total concurrent notifications
+    for (let i = 0; i < 20; i++) {
+      for (const m of whatsappSamples) {
+        messages.push(m);
+        packages.push("com.whatsapp");
+      }
+      for (const m of telegramMessages) {
+        messages.push(m);
+        packages.push("org.telegram.messenger");
+      }
+    }
+
+    const res = await fetch(`${state.apiBase}/detect/batch`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        messages: messages,
+        source: "NOTIFICATION",
+        app_packages: packages
+      })
+    });
+
+    if (!res.ok) throw new Error(`HTTP ${res.status}: Failed to execute batch test`);
+    const data = await res.json();
+
+    panel.classList.remove("hidden");
+    container.classList.remove("hidden");
+
+    document.getElementById("flood-count").textContent = `${data.total_processed} / 200`;
+    document.getElementById("flood-latency").textContent = `${data.total_latency_ms.toFixed(1)} ms`;
+    document.getElementById("flood-avg-latency").textContent = `${data.avg_latency_ms.toFixed(2)} ms`;
+    document.getElementById("flood-throughput").textContent = `${data.throughput_items_per_sec.toLocaleString()} msg/s`;
+
+    container.innerHTML = `
+      <table class="w-full text-left">
+        <thead class="bg-slate-100 dark:bg-slate-800/80 text-[10px] font-mono text-slate-500 uppercase sticky top-0">
+          <tr>
+            <th class="px-3 py-1.5">#</th>
+            <th class="px-3 py-1.5">Package</th>
+            <th class="px-3 py-1.5">Snippet</th>
+            <th class="px-3 py-1.5">Classification</th>
+            <th class="px-3 py-1.5">Risk</th>
+            <th class="px-3 py-1.5">Latency</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100 dark:divide-slate-800 font-mono text-[11px]">
+          ${data.results.map((r, i) => `
+            <tr class="${i % 2 === 0 ? 'bg-transparent' : 'bg-slate-50/50 dark:bg-slate-800/30'}">
+              <td class="px-3 py-1 text-slate-400">${i + 1}</td>
+              <td class="px-3 py-1 text-indigo-400">${r.package_name || 'msg'}</td>
+              <td class="px-3 py-1 text-slate-700 dark:text-slate-300 font-sans">${r.text_snippet}</td>
+              <td class="px-3 py-1 font-bold ${r.classification === 'Likely Scam' ? 'text-rose-500' : (r.classification === 'Suspicious' ? 'text-amber-500' : 'text-emerald-500')}">${r.classification}</td>
+              <td class="px-3 py-1">${r.risk_score.toFixed(0)}</td>
+              <td class="px-3 py-1 text-slate-400">${r.processing_time_ms.toFixed(1)}ms</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    `;
+
+    showToast(`Processed 200 events in ${data.total_latency_ms.toFixed(1)}ms (${data.throughput_items_per_sec} msg/sec)`, "success");
+
+  } catch (err) {
+    showToast(`Flood test error: ${err.message}`, "error");
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = `<span>⚡</span><span>Execute 200-Event Flood Test</span>`;
+  }
+}

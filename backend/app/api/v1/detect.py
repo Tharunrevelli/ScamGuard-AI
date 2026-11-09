@@ -13,6 +13,9 @@ from backend.app.schemas import (
     BatchEvaluateRequest,
     BatchEvaluateResponse,
     BatchEvaluateItem,
+    BatchDetectRequest,
+    BatchDetectResponse,
+    BatchDetectItemResult,
     RiskIndicator,
 )
 from backend.app.core.rules import default_rule_engine
@@ -217,6 +220,60 @@ async def evaluate_batch(payload: BatchEvaluateRequest):
         filtered_locally=filtered_count,
         request_reduction_pct=reduction_pct,
         results=items
+    )
+
+
+@router.post(
+    "/detect/batch",
+    response_model=BatchDetectResponse,
+    summary="High-Concurrency Batch Notification Detector",
+    description="Vectorized batch processing for 100+ concurrent notifications from multiple apps. Demonstrates backend scalability under notification floods."
+)
+async def detect_batch_messages(payload: BatchDetectRequest):
+    t0 = time.perf_counter()
+    messages = payload.messages
+    total = len(messages)
+    packages = payload.app_packages or []
+
+    # 1. Vectorized ML Inference pass across all messages at once
+    ml_results = default_model_service.predict_batch(messages)
+
+    results: List[BatchDetectItemResult] = []
+    for i, msg in enumerate(messages):
+        t_item_0 = time.perf_counter()
+        pkg = packages[i] if i < len(packages) else None
+
+        # Check truncation
+        is_trunc, trunc_warn = default_local_prefilter.check_truncation(msg)
+
+        # Rule evaluation
+        r_res = default_rule_engine.evaluate(msg)
+        m_res = ml_results[i]
+        h_res = default_hybrid_engine.evaluate(msg, r_res, m_res)
+        item_ms = (time.perf_counter() - t_item_0) * 1000
+
+        results.append(BatchDetectItemResult(
+            index=i,
+            text_snippet=msg[:60] + ("..." if len(msg) > 60 else ""),
+            package_name=pkg,
+            classification=h_res["classification"],
+            risk_score=h_res["risk_score"],
+            confidence=h_res["confidence"],
+            is_truncated=is_trunc,
+            truncation_warning=trunc_warn,
+            processing_time_ms=round(item_ms, 2)
+        ))
+
+    total_latency_ms = (time.perf_counter() - t0) * 1000
+    avg_latency = total_latency_ms / total if total > 0 else 0.0
+    throughput = (total / (total_latency_ms / 1000.0)) if total_latency_ms > 0 else 0.0
+
+    return BatchDetectResponse(
+        total_processed=total,
+        total_latency_ms=round(total_latency_ms, 2),
+        avg_latency_ms=round(avg_latency, 3),
+        results=results,
+        throughput_items_per_sec=round(throughput, 1)
     )
 
 

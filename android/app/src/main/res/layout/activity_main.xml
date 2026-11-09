@@ -284,6 +284,47 @@
                 android:text="Authorize Notification Access"
                 android:textSize="11sp"
                 android:backgroundTint="#F8FAFC"
+                android:textColor="@color/primary"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Protection when Notifications are OFF in Mobile -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="WHEN NOTIFICATIONS ARE OFF:"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:textColor="@color/primary"
+                android:layout_marginBottom="4dp" />
+
+            <Switch
+                android:id="@+id/switchAccessibility"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="On-Screen Chat Protection (Accessibility)"
+                android:textSize="12sp"
+                android:checked="true"
+                android:layout_marginBottom="6dp" />
+
+            <Button
+                android:id="@+id/btnAccessibilityPermission"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:text="Authorize On-Screen Chat Access"
+                android:textSize="11sp"
+                android:backgroundTint="#F8FAFC"
+                android:textColor="@color/primary"
+                android:layout_marginBottom="12dp" />
+
+            <!-- Scalability Flood Simulation Button -->
+            <Button
+                android:id="@+id/btnSimulateFlood"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:text="⚡ Simulate 100+ Notification Burst (Scalability Test)"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:backgroundTint="#EEF2FF"
                 android:textColor="@color/primary" />
         </LinearLayout>
 

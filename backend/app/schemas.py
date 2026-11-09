@@ -97,6 +97,32 @@ class BatchEvaluateResponse(BaseModel):
     results: List[BatchEvaluateItem]
 
 
+class BatchDetectRequest(BaseModel):
+    messages: List[str] = Field(..., min_length=1, max_length=500, description="List of concurrent notification message texts to evaluate")
+    source: MessageSource = Field(default="NOTIFICATION", description="Source of notifications")
+    app_packages: Optional[List[str]] = Field(default=None, description="Optional package names corresponding to each notification")
+
+
+class BatchDetectItemResult(BaseModel):
+    index: int
+    text_snippet: str
+    package_name: Optional[str] = None
+    classification: ClassificationTier
+    risk_score: float
+    confidence: float
+    is_truncated: bool = False
+    truncation_warning: Optional[str] = None
+    processing_time_ms: float
+
+
+class BatchDetectResponse(BaseModel):
+    total_processed: int
+    total_latency_ms: float
+    avg_latency_ms: float
+    results: List[BatchDetectItemResult]
+    throughput_items_per_sec: float
+
+
 class FeedbackRequest(BaseModel):
     request_id: str
     actual_label: Literal["scam", "safe", "ambiguous"]

@@ -170,3 +170,42 @@ async def test_batch_evaluate_endpoint():
         assert data["filtered_locally"] >= 1
         assert data["routed_to_backend"] >= 1
         assert data["request_reduction_pct"] > 0
+
+
+@pytest.mark.anyio
+async def test_detect_batch_flood_scalability():
+    """Verify backend handles a burst of 100 concurrent notifications from multiple apps."""
+    whatsapp_samples = [
+        "Hey! Are you coming to the group study session?",
+        "URGENT: Chase Bank alert! Account suspended. Verify at https://chase-security-verify.xyz immediately.",
+        "Can you send me the lecture slides from today?",
+        "Your verification code is 849201. Never share this code with anyone.",
+        "Sounds good, see you at 6pm."
+    ] * 10  # 50 messages from WhatsApp
+
+    telegram_samples = [
+        "Congratulations! You won the UK National Lottery! Ring 09061743810 to collect your £500,000 jackpot.",
+        "Running a few minutes late, wait for me outside.",
+        "SECURITY ALERT: Wells Fargo account locked. Visit http://192.168.1.10/verify to restore access.",
+        "Thanks for the update, will check it tonight.",
+        "Amazon free $500 gift card! Claim at bit.ly/free-amz-gift"
+    ] * 10  # 50 messages from Telegram
+
+    all_messages = whatsapp_samples + telegram_samples
+    assert len(all_messages) == 100
+
+    payload = {
+        "messages": all_messages,
+        "source": "NOTIFICATION",
+        "app_packages": ["com.whatsapp"] * 50 + ["org.telegram.messenger"] * 50
+    }
+
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+        res = await client.post("/api/v1/detect/batch", json=payload)
+        assert res.status_code == 200
+        data = res.json()
+        assert data["total_processed"] == 100
+        assert len(data["results"]) == 100
+        assert data["total_latency_ms"] > 0
+        assert data["throughput_items_per_sec"] > 50  # Must exceed 50 items/sec via vectorization
+        assert data["results"][1]["classification"] in ("Likely Scam", "Suspicious")

@@ -9,4 +9,5 @@
     <string name="notification_monitoring_label">Background Notification Monitor</string>
     <string name="authorize_notifications">Grant Notification Access</string>
     <string name="clear_history">Clear Local History</string>
+    <string name="accessibility_service_desc">ScamGuard on-screen threat protection. Scans messages inside chat applications when notifications are disabled on the device.</string>
 </resources>
