@@ -28,3 +28,10 @@ local.properties
 .idea/
 .vscode/
 *.iml
+
+# Local Media & Testing Artifacts
+conversation.mp4
+issues/
+*.log
+phone_screen*.png
+
