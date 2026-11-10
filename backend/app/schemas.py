@@ -6,13 +6,16 @@ from typing import List, Optional, Dict, Any, Literal
 from pydantic import BaseModel, Field, field_validator
 
 
-MessageSource = Literal["MANUAL", "NOTIFICATION", "SHARE_SHEET", "CLIPBOARD", "BENCHMARK", "SMS"]
+MessageSource = Literal["MANUAL", "NOTIFICATION", "SHARE_SHEET", "CLIPBOARD", "BENCHMARK", "SMS", "SMS_BROADCAST", "GMAIL_API", "WHATSAPP_COMPANION"]
 ClassificationTier = Literal["Likely Safe", "Suspicious", "Likely Scam", "Unable to Determine"]
 
 
 class DetectionRequest(BaseModel):
     text: str = Field(..., min_length=1, max_length=4000, description="Message body or preview text to inspect")
     source: MessageSource = Field(default="MANUAL", description="Origin of the inspected message event")
+    sender: Optional[str] = Field(default=None, description="Sender name, phone, or email address")
+    is_sender_in_contacts: bool = Field(default=False, description="Whether the sender is verified in the user's local contact address book")
+    package_name: Optional[str] = Field(default=None, description="Android package name of the originating app")
     client_session_id: Optional[str] = Field(default=None, description="Optional client identifier for session isolation")
     bypass_prefilter: bool = Field(default=False, description="Whether to bypass Stage 1 local filtering")
     redact_pii_before_analysis: bool = Field(default=False, description="Enable client/edge PII sanitization")
@@ -66,6 +69,8 @@ class DetectionResponse(BaseModel):
 class PrefilterCheckRequest(BaseModel):
     text: str = Field(..., min_length=1, max_length=4000)
     user_requested: bool = False
+    in_contacts: bool = False
+    package_name: Optional[str] = None
 
 
 class PrefilterCheckResponse(BaseModel):

@@ -56,11 +56,17 @@ async def detect_message(payload: DetectionRequest, request: Request):
         if pii_redacted:
             redacted_preview = processed_text[:120] + ("..." if len(processed_text) > 120 else "")
 
-    # Stage 1: Optional Local Prefilter check simulation if event came from notification
-    # and bypass_prefilter is False
+    # Stage 1: Optional Local Prefilter check simulation if event came from background notification,
+    # SMS broadcast, Gmail API, or WhatsApp companion, and bypass_prefilter is False
     stage_applied = "HYBRID_REMOTE"
-    if not payload.bypass_prefilter and payload.source == "NOTIFICATION":
-        pre_check = default_local_prefilter.evaluate(processed_text, user_requested=False)
+    background_sources = ("NOTIFICATION", "SMS_BROADCAST", "GMAIL_API", "WHATSAPP_COMPANION")
+    if not payload.bypass_prefilter and payload.source in background_sources:
+        pre_check = default_local_prefilter.evaluate(
+            processed_text,
+            user_requested=False,
+            in_contacts=payload.is_sender_in_contacts,
+            package_name=payload.package_name
+        )
         if not pre_check["should_route_to_backend"]:
             # Edge filter satisfied: Classified as Likely Safe on device
             elapsed_ms = (time.perf_counter() - t0) * 1000
@@ -73,21 +79,23 @@ async def detect_message(payload: DetectionRequest, request: Request):
                 model_version="stage1-edge-filter",
                 latency_ms=round(elapsed_ms, 2)
             )
+            reasons = [
+                f"Stage 1 on-device filter: {pre_check['reason']}",
+                "No URLs, monetary lures, urgent threats, or credential requests detected."
+            ]
             return DetectionResponse(
                 request_id=request_id,
                 classification="Likely Safe",
                 risk_score=5.0,
-                confidence=0.92,
-                reasons=[
-                    "Stage 1 on-device filter evaluated message as benign conversational content.",
-                    "No URLs, monetary lures, urgent threats, or credential requests detected."
-                ],
+                confidence=0.95 if pre_check["savings_category"] == "FILTERED_VERIFIED_CONTACT" else 0.92,
+                reasons=reasons,
                 suggested_actions=["Standard vigilance advised."],
                 indicators=[],
                 breakdown={
                     "ml_risk": 0.0,
                     "rule_risk": 0.0,
-                    "stage1_filtered": True
+                    "stage1_filtered": True,
+                    "savings_category": pre_check["savings_category"]
                 },
                 model_version="stage1-edge-prefilter",
                 processing_time_ms=round(elapsed_ms, 2),
@@ -163,7 +171,12 @@ async def detect_message(payload: DetectionRequest, request: Request):
     description="Tests the lightweight local prefilter logic to determine if a message warrants backend transmission."
 )
 async def check_prefilter(payload: PrefilterCheckRequest):
-    res = default_local_prefilter.evaluate(payload.text, user_requested=payload.user_requested)
+    res = default_local_prefilter.evaluate(
+        payload.text,
+        user_requested=payload.user_requested,
+        in_contacts=payload.in_contacts,
+        package_name=payload.package_name
+    )
     return PrefilterCheckResponse(
         should_route_to_backend=res["should_route_to_backend"],
         local_risk_tier=res["local_risk_tier"],

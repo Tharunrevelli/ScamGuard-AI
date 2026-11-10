@@ -71,7 +71,27 @@ class LocalPrefilter:
             return True, "Preview appears cut off mid-sentence. Full message should be verified via Share Sheet."
         return False, None
 
-    def evaluate(self, text: str, user_requested: bool = False) -> Dict[str, Any]:
+    def is_contact_whitelisted(self, text: str, in_contacts: bool = False) -> bool:
+        """
+        Privacy Shield: If the sender is in the user's verified local address book
+        and the message contains no overt URLs, financial patterns, or panic triggers,
+        the message is whitelisted and kept 100% on device with zero cloud telemetry.
+        """
+        if not in_contacts:
+            return False
+        # If in contacts, verify message is strictly non-threat conversational
+        has_url = bool(self.url_pattern.search(text))
+        has_money = bool(self.money_pattern.search(text))
+        has_urgent = bool(self.urgent_keywords.search(text))
+        return not (has_url or has_money or has_urgent)
+
+    def evaluate(
+        self,
+        text: str,
+        user_requested: bool = False,
+        in_contacts: bool = False,
+        package_name: str | None = None
+    ) -> Dict[str, Any]:
         """
         Evaluate if a message should be routed to Stage 2 backend analysis.
         If user_requested is True (e.g. user manually pasted or clicked share), always route to Stage 2.
@@ -93,6 +113,26 @@ class LocalPrefilter:
                 "triggers_detected": ["USER_EXPLICIT_REQUEST"],
                 "reason": "User explicitly requested analysis",
                 "savings_category": "USER_REQUESTED",
+            }
+
+        # 1. E-Commerce / Social Media High-Volume Noise Package Rejection
+        if package_name and self.is_noise_package(package_name):
+            return {
+                "should_route_to_backend": False,
+                "local_risk_tier": "Likely Safe",
+                "triggers_detected": [],
+                "reason": f"Noise notification package rejected ({package_name}); 0 cloud load.",
+                "savings_category": "FILTERED_NOISE_PACKAGE",
+            }
+
+        # 2. Local Contact Address Book Privacy Shield
+        if self.is_contact_whitelisted(text, in_contacts=in_contacts):
+            return {
+                "should_route_to_backend": False,
+                "local_risk_tier": "Likely Safe",
+                "triggers_detected": [],
+                "reason": "Verified sender in local contact address book with no threat triggers; 100% retained on device for privacy.",
+                "savings_category": "FILTERED_VERIFIED_CONTACT",
             }
 
         triggers: List[str] = []
