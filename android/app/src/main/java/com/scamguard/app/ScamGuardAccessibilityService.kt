@@ -37,12 +37,16 @@ class ScamGuardAccessibilityService : AccessibilityService() {
         val pkgName = event.packageName?.toString() ?: return
         val lowerPkg = pkgName.lowercase()
 
-        // Only monitor approved messaging applications on-screen
+        // Only monitor approved messaging and email applications on-screen
         val isTargetApp = lowerPkg.contains("whatsapp") ||
                 lowerPkg.contains("telegram") ||
                 lowerPkg.contains("messaging") ||
                 lowerPkg.contains(".mms") ||
-                lowerPkg.contains("sms")
+                lowerPkg.contains("sms") ||
+                lowerPkg.contains("gmail") ||
+                lowerPkg.contains("android.gm") ||
+                lowerPkg.contains("outlook") ||
+                lowerPkg.contains("mail")
 
         if (!isTargetApp) return
 
@@ -68,13 +72,25 @@ class ScamGuardAccessibilityService : AccessibilityService() {
                 text.contains("www.", ignoreCase = true) ||
                 text.contains("verify", ignoreCase = true) ||
                 text.contains("suspended", ignoreCase = true) ||
+                text.contains("blocked", ignoreCase = true) ||
                 text.contains("otp", ignoreCase = true) ||
-                text.contains("won", ignoreCase = true)
+                text.contains("won", ignoreCase = true) ||
+                text.contains("urgent", ignoreCase = true) ||
+                text.contains("bill", ignoreCase = true) ||
+                text.contains("power", ignoreCase = true) ||
+                text.contains("electricity", ignoreCase = true) ||
+                text.contains("parcel", ignoreCase = true) ||
+                text.contains("delivery", ignoreCase = true) ||
+                text.contains("kyc", ignoreCase = true) ||
+                text.contains("pan", ignoreCase = true) ||
+                text.contains("job", ignoreCase = true) ||
+                text.contains("earn", ignoreCase = true) ||
+                text.contains("bank", ignoreCase = true)
             ) {
                 // Avoid redundant evaluation of the same text
                 if (!ScanProcessor.isDuplicate("ACCESSIBILITY|$pkgName|$text")) {
                     val assessment = onDeviceEngine.evaluate(text)
-                    if (assessment.classification == "Likely Scam" || (assessment.classification == "Suspicious" && assessment.riskScore >= 50.0)) {
+                    if (assessment.classification == "Likely Scam" || assessment.classification == "Suspicious") {
                         Log.w("ScamGuard", "On-Screen threat detected via Accessibility [Notifications OFF scenario]: ${assessment.classification} ($pkgName)")
                         val detection = onDeviceEngine.toDetectionResult(text, assessment)
                         historyStorage.record(detection, "ON-SCREEN ($pkgName)", text)

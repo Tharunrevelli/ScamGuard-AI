@@ -81,7 +81,7 @@ object NotificationBatchQueue {
 
                 historyStorage.record(detection, "NOTIF (${notif.pkgName})", message)
 
-                if (assessment.classification == "Likely Scam" || (assessment.classification == "Suspicious" && assessment.riskScore >= 45.0)) {
+                if (assessment.classification == "Likely Scam" || assessment.classification == "Suspicious") {
                     val sender = if (notif.title.isNotBlank()) notif.title else notif.pkgName
                     NotificationHelper.showWarning(
                         context = context,

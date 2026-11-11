@@ -19,7 +19,7 @@ object ScanProcessor {
         val hash = PrivacyRedactor.sha256(contentKey)
         val lastSeen = processedHashCache[hash]
         val now = System.currentTimeMillis()
-        if (lastSeen != null && (now - lastSeen) < 180_000) { // 3 minutes
+        if (lastSeen != null && (now - lastSeen) < 45_000) { // 45 seconds cache window
             return true
         }
         processedHashCache[hash] = now

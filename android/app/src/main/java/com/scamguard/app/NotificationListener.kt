@@ -80,7 +80,7 @@ class NotificationListener : NotificationListenerService() {
         val isWhatsApp = lowerPkg.contains("whatsapp")
         val isSms = lowerPkg.contains("messaging") || lowerPkg.contains(".mms") || lowerPkg.contains("sms")
         val isTelegram = lowerPkg.contains("telegram") || lowerPkg.contains("signal")
-        val isEmail = lowerPkg.contains("gmail") || lowerPkg.contains("android.gm") || lowerPkg.contains("outlook")
+        val isEmail = lowerPkg.contains("gmail") || lowerPkg.contains("android.gm") || lowerPkg.contains("outlook") || lowerPkg.contains("mail") || lowerPkg.contains("email")
 
         if (isWhatsApp && monitorWhatsApp) return true
         if (isSms && monitorSms) return true

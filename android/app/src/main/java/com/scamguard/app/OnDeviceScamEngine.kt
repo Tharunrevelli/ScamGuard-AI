@@ -55,7 +55,7 @@ class OnDeviceScamEngine {
     )
 
     private val urgencyPattern = Pattern.compile(
-        "\\b(urgent|urgently|immediately|action required|suspended|blocked|suspended|warning|compromised|expire[sd]?|within \\d+ hours?|final notice|last chance|deactivate[d]?)\\b",
+        "\\b(urgent|urgently|immediately|action required|suspended|blocked|warning|compromised|expire[sd]?|within \\d+ hours?|final notice|last chance|deactivate[d]?|tonight|pending)\\b",
         Pattern.CASE_INSENSITIVE
     )
 
@@ -65,7 +65,27 @@ class OnDeviceScamEngine {
     )
 
     private val bankingImpersonationPattern = Pattern.compile(
-        "\\b(chase|wells fargo|bank of america|citibank|paypal|venmo|zelle|sbi|hdfc|icici|barclays|hsbc|irs|tax refund|usps|fedex|dhl|netflix|apple id|amazon security)\\b",
+        "\\b(chase|wells fargo|bank of america|citibank|paypal|venmo|zelle|sbi|hdfc|icici|axis|pnb|bob|kotak|canara|union bank|paytm|phonepe|gpay|google pay|barclays|hsbc|irs|tax refund|usps|fedex|dhl|netflix|apple id|amazon)\\b",
+        Pattern.CASE_INSENSITIVE
+    )
+
+    private val electricityPattern = Pattern.compile(
+        "\\b(electricity|power|power supply|disconnected|disconnection|eb bill|light bill|electricity office|electricity officer)\\b",
+        Pattern.CASE_INSENSITIVE
+    )
+
+    private val jobOfferPattern = Pattern.compile(
+        "\\b(part[- ]time|job offer|daily income|earn money|salary|work from home|telegram hr|rating hotels|review task|daily profit|earn \\d+)\\b",
+        Pattern.CASE_INSENSITIVE
+    )
+
+    private val courierDeliveryPattern = Pattern.compile(
+        "\\b(parcel|courier|delivery|customs|india post|indiapost|dhl|fedex|unpaid fee|package pending|failed delivery|reschedule|address incorrect|consignment|unpaid customs)\\b",
+        Pattern.CASE_INSENSITIVE
+    )
+
+    private val kycPanPattern = Pattern.compile(
+        "\\b(kyc|pan card|pan|aadhaar|debit card|credit card|yono|netbanking|account blocked|account suspend|re-kyc|document verification|sim block|sim deactivat)\\b",
         Pattern.CASE_INSENSITIVE
     )
 
@@ -237,7 +257,94 @@ class OnDeviceScamEngine {
             reasons.add("Referenced major institution ($snippet) under unverified communication context.")
         }
 
-        // 7. Financial & Cryptocurrency Lures
+        // 7. General Embedded URLs
+        if (vectors["link_domain_risk"] == null || vectors["link_domain_risk"]!! < 50.0) {
+            val generalUrlMatcher = urlPattern.matcher(raw)
+            if (generalUrlMatcher.find()) {
+                val snippet = generalUrlMatcher.group()
+                score += 20.0
+                vectors["link_domain_risk"] = 55.0
+                indicators.add(
+                    RiskIndicator(
+                        category = "EMBEDDED_LINK",
+                        severity = "MEDIUM",
+                        description = "Embedded web link in an unverified personal message.",
+                        matchedSnippets = listOf(snippet)
+                    )
+                )
+                reasons.add("Message contains an embedded link ($snippet) requiring domain authenticity check.")
+            }
+        }
+
+        // 8. Utility & Electricity Disconnection Scams
+        val elecMatcher = electricityPattern.matcher(raw)
+        if (elecMatcher.find()) {
+            val snippet = elecMatcher.group()
+            score += 30.0
+            vectors["urgency_coercion"] = max(vectors["urgency_coercion"] ?: 0.0, 80.0)
+            indicators.add(
+                RiskIndicator(
+                    category = "UTILITY_DISCONNECTION",
+                    severity = "HIGH",
+                    description = "Threat of imminent electricity or power disconnection.",
+                    matchedSnippets = listOf(snippet)
+                )
+            )
+            reasons.add("Urgent threat of utility or electricity disconnection ($snippet) detected.")
+        }
+
+        // 9. Job Offer & Daily Income Scams
+        val jobMatcher = jobOfferPattern.matcher(raw)
+        if (jobMatcher.find()) {
+            val snippet = jobMatcher.group()
+            score += 30.0
+            vectors["social_engineering"] = max(vectors["social_engineering"] ?: 0.0, 80.0)
+            indicators.add(
+                RiskIndicator(
+                    category = "JOB_OFFER_SCAM",
+                    severity = "HIGH",
+                    description = "Unsolicited work-from-home or rating task job offer with unrealistic payouts.",
+                    matchedSnippets = listOf(snippet)
+                )
+            )
+            reasons.add("Unsolicited part-time job or high daily income task ($snippet) detected.")
+        }
+
+        // 10. Courier & Customs Delivery Fraud
+        val courierMatcher = courierDeliveryPattern.matcher(raw)
+        if (courierMatcher.find()) {
+            val snippet = courierMatcher.group()
+            score += 30.0
+            vectors["impersonation"] = max(vectors["impersonation"] ?: 0.0, 75.0)
+            indicators.add(
+                RiskIndicator(
+                    category = "COURIER_PHISHING",
+                    severity = "HIGH",
+                    description = "Parcel delivery failure or customs fee payment claim.",
+                    matchedSnippets = listOf(snippet)
+                )
+            )
+            reasons.add("Notice regarding parcel delivery or unpaid customs fee ($snippet) detected.")
+        }
+
+        // 11. KYC, PAN, Aadhaar & Account Freeze Scams
+        val kycMatcher = kycPanPattern.matcher(raw)
+        if (kycMatcher.find()) {
+            val snippet = kycMatcher.group()
+            score += 35.0
+            vectors["credential_harvesting"] = max(vectors["credential_harvesting"] ?: 0.0, 85.0)
+            indicators.add(
+                RiskIndicator(
+                    category = "KYC_PAN_FRAUD",
+                    severity = "CRITICAL",
+                    description = "Urgent solicitation to update KYC, PAN card, Aadhaar, or banking credentials.",
+                    matchedSnippets = listOf(snippet)
+                )
+            )
+            reasons.add("Demand for KYC, PAN card, or bank account update ($snippet) detected.")
+        }
+
+        // 12. Financial & Cryptocurrency Lures
         if (moneyPattern.matcher(raw).find()) {
             score += 15.0
             vectors["financial_risk"] = 65.0

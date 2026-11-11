@@ -78,7 +78,7 @@ class SmsReceiver : BroadcastReceiver() {
             historyStorage.record(detectionResult, "SMS ($sender)", combinedMessage)
             context.sendBroadcast(Intent("com.scamguard.app.REFRESH_HISTORY"))
 
-            if (assessment.classification == "Likely Scam" || (assessment.classification == "Suspicious" && assessment.riskScore >= 45.0)) {
+            if (assessment.classification == "Likely Scam" || assessment.classification == "Suspicious") {
                 NotificationHelper.showWarning(
                     context = context.applicationContext,
                     sourcePkg = "SMS",
@@ -112,7 +112,7 @@ class SmsReceiver : BroadcastReceiver() {
                     historyStorage.record(data, "SMS ($sender)", combinedMessage)
                     context.sendBroadcast(Intent("com.scamguard.app.REFRESH_HISTORY"))
 
-                    if (data.classification == "Likely Scam" || (data.classification == "Suspicious" && data.riskScore >= 45.0)) {
+                    if (data.classification == "Likely Scam" || data.classification == "Suspicious") {
                         NotificationHelper.showWarning(
                             context = context.applicationContext,
                             sourcePkg = "SMS",
