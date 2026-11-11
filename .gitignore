@@ -34,4 +34,5 @@ conversation.mp4
 issues/
 *.log
 phone_screen*.png
+~$*
 
