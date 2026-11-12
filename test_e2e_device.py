@@ -57,8 +57,9 @@ def main():
         "bypass_prefilter": True,
         "redact_pii_before_analysis": True
     }
-    # write to phone
-    run_adb(["shell", f"cat << 'EOF' > /data/local/tmp/scam_test.json\n{json.dumps(sample_smishing)}\nEOF"])
+    with open("temp_test.json", "w", encoding="utf-8") as f:
+        json.dump(sample_smishing, f)
+    run_adb(["push", "temp_test.json", "/data/local/tmp/scam_test.json"])
     out, err = run_adb(["shell", "/system/bin/curl", "-s", "-X", "POST", "http://127.0.0.1:8000/api/v1/detect",
                         "-H", "Content-Type: application/json", "-d", "@/data/local/tmp/scam_test.json"])
     detect_lines = [l for l in out.split("\n") if "classification" in l]
