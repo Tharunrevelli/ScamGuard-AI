@@ -81,6 +81,8 @@ if os.path.exists(WEB_DIR):
     app.mount("/static", StaticFiles(directory=WEB_DIR), name="static")
 
     @app.get("/", tags=["Web App"])
+    @app.get("/index.html", tags=["Web App"])
+    @app.get("/web/index.html", tags=["Web App"])
     async def serve_index():
         index_file = os.path.join(WEB_DIR, "index.html")
         if os.path.exists(index_file):
@@ -94,7 +96,25 @@ if os.path.exists(WEB_DIR):
             )
         return {"message": f"ScamGuard API is running. Visit /docs for OpenAPI specifications."}
 
+    @app.get("/styles.css", tags=["Web App"])
+    @app.get("/web/styles.css", tags=["Web App"])
+    async def serve_css():
+        css_file = os.path.join(WEB_DIR, "styles.css")
+        if os.path.exists(css_file):
+            return FileResponse(css_file, media_type="text/css")
+        return JSONResponse(status_code=404, content={"message": "CSS file not found."})
+
+    @app.get("/app.js", tags=["Web App"])
+    @app.get("/web/app.js", tags=["Web App"])
+    async def serve_js():
+        js_file = os.path.join(WEB_DIR, "app.js")
+        if os.path.exists(js_file):
+            return FileResponse(js_file, media_type="application/javascript")
+        return JSONResponse(status_code=404, content={"message": "JS file not found."})
+
     @app.get("/download-apk", tags=["Mobile App"])
+    @app.get("/web/ScamGuard.apk", tags=["Mobile App"])
+    @app.get("/ScamGuard.apk", tags=["Mobile App"])
     async def download_apk():
         apk_path = os.path.join(WEB_DIR, "ScamGuard.apk")
         if os.path.exists(apk_path):

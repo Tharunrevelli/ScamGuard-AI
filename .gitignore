@@ -36,3 +36,6 @@ issues/
 phone_screen*.png
 ~$*
 
+
+.vercel
+.env*

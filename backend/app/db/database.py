@@ -15,8 +15,13 @@ class DatabaseManager:
 
     def __init__(self, db_path: str = settings.DB_PATH):
         self.db_path = db_path
-        os.makedirs(os.path.dirname(self.db_path), exist_ok=True)
-        self._init_db()
+        try:
+            db_dir = os.path.dirname(self.db_path)
+            if db_dir:
+                os.makedirs(db_dir, exist_ok=True)
+            self._init_db()
+        except Exception as e:
+            print(f"[DatabaseManager] Database initialization warning: {e}")
 
     def _get_connection(self) -> sqlite3.Connection:
         conn = sqlite3.connect(self.db_path)

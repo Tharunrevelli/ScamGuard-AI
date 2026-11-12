@@ -1,0 +1,31 @@
+/.git
+/.github
+/.pytest_cache
+/__pycache__
+*.pyc
+/tests/
+*.db
+*.sqlite*
+
+# Root android source tree
+/android/
+web/*.apk.idsig
+
+# Root offline ML datasets and training scripts (backend/app/ml/ is included)
+/ml/
+
+# Root thesis, media, and docs
+/thesis/
+/docs/
+/issues/
+*.pptx
+*.docx
+*.mp4
+*.wav
+
+# Local scripts
+run_demo.ps1
+test_android_device.ps1
+test_e2e_device.py
+architecture_diagram.png
+transcript.txt

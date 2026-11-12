@@ -1,0 +1,45 @@
+{
+  "version": 2,
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/index.py?__path__=/api/$1"
+    },
+    {
+      "source": "/health",
+      "destination": "/api/index.py?__path__=/health"
+    },
+    {
+      "source": "/docs",
+      "destination": "/api/index.py?__path__=/docs"
+    },
+    {
+      "source": "/openapi.json",
+      "destination": "/api/index.py?__path__=/openapi.json"
+    },
+    {
+      "source": "/download-apk",
+      "destination": "/web/ScamGuard.apk"
+    },
+    {
+      "source": "/static/(.*)",
+      "destination": "/web/$1"
+    },
+    {
+      "source": "/styles.css",
+      "destination": "/web/styles.css"
+    },
+    {
+      "source": "/app.js",
+      "destination": "/web/app.js"
+    },
+    {
+      "source": "/ScamGuard.apk",
+      "destination": "/web/ScamGuard.apk"
+    },
+    {
+      "source": "/",
+      "destination": "/web/index.html"
+    }
+  ]
+}
