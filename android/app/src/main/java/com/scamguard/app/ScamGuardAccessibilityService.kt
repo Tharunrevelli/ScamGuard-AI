@@ -46,7 +46,8 @@ class ScamGuardAccessibilityService : AccessibilityService() {
                 lowerPkg.contains("gmail") ||
                 lowerPkg.contains("android.gm") ||
                 lowerPkg.contains("outlook") ||
-                lowerPkg.contains("mail")
+                lowerPkg.contains("mail") ||
+                lowerPkg.contains("email")
 
         if (!isTargetApp) return
 
@@ -66,28 +67,43 @@ class ScamGuardAccessibilityService : AccessibilityService() {
         if (node == null) return
 
         val text = node.text?.toString()?.trim()
-        if (!text.isNullOrBlank() && text.length > 20) {
-            // Check if this snippet looks suspicious or contains a link/lure
-            if (text.contains("http", ignoreCase = true) ||
-                text.contains("www.", ignoreCase = true) ||
-                text.contains("verify", ignoreCase = true) ||
-                text.contains("suspended", ignoreCase = true) ||
-                text.contains("blocked", ignoreCase = true) ||
-                text.contains("otp", ignoreCase = true) ||
-                text.contains("won", ignoreCase = true) ||
-                text.contains("urgent", ignoreCase = true) ||
-                text.contains("bill", ignoreCase = true) ||
-                text.contains("power", ignoreCase = true) ||
-                text.contains("electricity", ignoreCase = true) ||
-                text.contains("parcel", ignoreCase = true) ||
-                text.contains("delivery", ignoreCase = true) ||
-                text.contains("kyc", ignoreCase = true) ||
-                text.contains("pan", ignoreCase = true) ||
-                text.contains("job", ignoreCase = true) ||
-                text.contains("earn", ignoreCase = true) ||
-                text.contains("bank", ignoreCase = true)
-            ) {
-                // Avoid redundant evaluation of the same text
+            ?: node.contentDescription?.toString()?.trim()
+
+        if (!text.isNullOrBlank() && text.length >= 8) {
+            val hasUrl = text.contains("http://", ignoreCase = true) ||
+                    text.contains("https://", ignoreCase = true) ||
+                    text.contains("www.", ignoreCase = true) ||
+                    text.contains(".xyz", ignoreCase = true) ||
+                    text.contains(".top", ignoreCase = true) ||
+                    text.contains(".cc", ignoreCase = true) ||
+                    text.contains(".club", ignoreCase = true)
+
+            val hasLureKeyword = text.contains("verify", ignoreCase = true) ||
+                    text.contains("suspended", ignoreCase = true) ||
+                    text.contains("blocked", ignoreCase = true) ||
+                    text.contains("otp", ignoreCase = true) ||
+                    text.contains("won", ignoreCase = true) ||
+                    text.contains("winner", ignoreCase = true) ||
+                    text.contains("urgent", ignoreCase = true) ||
+                    text.contains("bill", ignoreCase = true) ||
+                    text.contains("power", ignoreCase = true) ||
+                    text.contains("electricity", ignoreCase = true) ||
+                    text.contains("parcel", ignoreCase = true) ||
+                    text.contains("delivery", ignoreCase = true) ||
+                    text.contains("kyc", ignoreCase = true) ||
+                    text.contains("pan", ignoreCase = true) ||
+                    text.contains("job", ignoreCase = true) ||
+                    text.contains("earn", ignoreCase = true) ||
+                    text.contains("bank", ignoreCase = true) ||
+                    text.contains("lottery", ignoreCase = true) ||
+                    text.contains("prize", ignoreCase = true) ||
+                    text.contains("gift", ignoreCase = true) ||
+                    text.contains("refund", ignoreCase = true) ||
+                    text.contains("tax", ignoreCase = true) ||
+                    text.contains("challan", ignoreCase = true)
+
+            if (hasUrl || hasLureKeyword) {
+                // Avoid redundant evaluation of identical text
                 if (!ScanProcessor.isDuplicate("ACCESSIBILITY|$pkgName|$text")) {
                     val assessment = onDeviceEngine.evaluate(text)
                     if (assessment.classification == "Likely Scam" || assessment.classification == "Suspicious") {
@@ -96,6 +112,32 @@ class ScamGuardAccessibilityService : AccessibilityService() {
                         historyStorage.record(detection, "ON-SCREEN ($pkgName)", text)
                         sendBroadcast(Intent("com.scamguard.app.REFRESH_HISTORY"))
 
+                        // 1. Trigger haptic vibration alert (Physical warning even when notifications are muted/off)
+                        try {
+                            val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as? android.os.Vibrator
+                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                                vibrator?.vibrate(android.os.VibrationEffect.createOneShot(500, android.os.VibrationEffect.DEFAULT_AMPLITUDE))
+                            } else {
+                                vibrator?.vibrate(500)
+                            }
+                        } catch (e: Exception) {
+                            Log.w("ScamGuard", "Vibration warning error: ${e.message}")
+                        }
+
+                        // 2. High-visibility On-Screen Toast (Pops up directly over WhatsApp/Gmail even if notifications are off)
+                        try {
+                            android.os.Handler(android.os.Looper.getMainLooper()).post {
+                                android.widget.Toast.makeText(
+                                    applicationContext,
+                                    "⚠️ SCAMGUARD ALERT: Suspected Scam on Screen!\nRisk: ${assessment.classification} (${assessment.riskScore.toInt()}/100)",
+                                    android.widget.Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        } catch (e: Exception) {
+                            Log.w("ScamGuard", "Toast alert error: ${e.message}")
+                        }
+
+                        // 3. High-priority notification banner (if notifications are enabled)
                         NotificationHelper.showWarning(
                             context = applicationContext,
                             sourcePkg = pkgName,

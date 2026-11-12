@@ -66,7 +66,8 @@ object NotificationHelper {
 
         val appName = when {
             sourcePkg.contains("whatsapp", ignoreCase = true) -> "WhatsApp"
-            sourcePkg.contains("gmail", ignoreCase = true) -> "Gmail"
+            sourcePkg.contains("gmail", ignoreCase = true) || sourcePkg.contains("android.gm", ignoreCase = true) -> "Gmail"
+            sourcePkg.contains("outlook", ignoreCase = true) || sourcePkg.contains("mail", ignoreCase = true) -> "Email"
             sourcePkg.contains("telegram", ignoreCase = true) -> "Telegram"
             sourcePkg.contains("signal", ignoreCase = true) -> "Signal"
             else -> "SMS"

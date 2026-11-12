@@ -153,18 +153,23 @@ class NotificationListener : NotificationListenerService() {
     }
 
     private fun extractNotificationText(notification: Notification, extras: android.os.Bundle): Pair<String, String> {
-        val title = extras.getCharSequence(Notification.EXTRA_TITLE)?.toString()
+        var title = extras.getCharSequence(Notification.EXTRA_TITLE)?.toString()
             ?: extras.getCharSequence(Notification.EXTRA_TITLE_BIG)?.toString()
             ?: ""
 
-        val texts = mutableListOf<String>()
+        val subject = extras.getCharSequence("android.subject")?.toString()
+        if (!subject.isNullOrBlank() && !title.contains(subject)) {
+            title = if (title.isBlank()) subject else "$title ($subject)"
+        }
 
-        // 1. AndroidX MessagingStyle extraction
+        val texts = linkedSetOf<String>()
+
+        // 1. AndroidX MessagingStyle extraction (WhatsApp, Telegram, Messages)
         try {
             val messagingStyle = NotificationCompat.MessagingStyle.extractMessagingStyleFromNotification(notification)
             if (messagingStyle != null) {
                 for (msg in messagingStyle.messages) {
-                    val msgText = msg.text?.toString()
+                    val msgText = msg.text?.toString()?.trim()
                     if (!msgText.isNullOrBlank()) {
                         texts.add(msgText)
                     }
@@ -175,13 +180,13 @@ class NotificationListener : NotificationListenerService() {
         }
 
         // 2. Raw android.messages Parcelable array
-        if (texts.isEmpty() && extras.containsKey("android.messages")) {
+        if (extras.containsKey("android.messages")) {
             try {
                 val parcelables = extras.getParcelableArray("android.messages")
                 if (parcelables != null) {
                     for (p in parcelables) {
                         if (p is android.os.Bundle) {
-                            val text = p.getCharSequence("text")?.toString()
+                            val text = p.getCharSequence("text")?.toString()?.trim()
                             if (!text.isNullOrBlank()) {
                                 texts.add(text)
                             }
@@ -193,42 +198,46 @@ class NotificationListener : NotificationListenerService() {
             }
         }
 
-        // 3. EXTRA_BIG_TEXT and EXTRA_TEXT
-        if (texts.isEmpty()) {
-            val bigText = extras.getCharSequence(Notification.EXTRA_BIG_TEXT)?.toString()
-            if (!bigText.isNullOrBlank()) {
-                texts.add(bigText)
-            }
-        }
-
-        if (texts.isEmpty()) {
-            val text = extras.getCharSequence(Notification.EXTRA_TEXT)?.toString()
-            if (!text.isNullOrBlank()) {
-                texts.add(text)
-            }
-        }
-
-        // 4. EXTRA_TEXT_LINES (InboxStyle)
-        if (texts.isEmpty()) {
-            val lines = extras.getCharSequenceArray(Notification.EXTRA_TEXT_LINES)
-            if (lines != null) {
-                for (line in lines) {
-                    val l = line?.toString()
-                    if (!l.isNullOrBlank()) {
-                        texts.add(l)
-                    }
+        // 3. EXTRA_TEXT_LINES (InboxStyle used by WhatsApp summaries, Gmail, Outlook)
+        val lines = extras.getCharSequenceArray(Notification.EXTRA_TEXT_LINES)
+        if (lines != null) {
+            for (line in lines) {
+                val l = line?.toString()?.trim()
+                if (!l.isNullOrBlank()) {
+                    texts.add(l)
                 }
             }
         }
 
-        // 5. Fallback fields
-        if (texts.isEmpty()) {
-            val subText = extras.getCharSequence(Notification.EXTRA_SUB_TEXT)?.toString()
-            if (!subText.isNullOrBlank()) texts.add(subText)
+        // 4. EXTRA_BIG_TEXT (expanded email body snippet in Gmail / Outlook)
+        val bigText = extras.getCharSequence(Notification.EXTRA_BIG_TEXT)?.toString()?.trim()
+        if (!bigText.isNullOrBlank()) {
+            texts.add(bigText)
         }
 
+        // 5. EXTRA_TEXT (standard notification single line text)
+        val text = extras.getCharSequence(Notification.EXTRA_TEXT)?.toString()?.trim()
+        if (!text.isNullOrBlank()) {
+            val isGenericCounter = text.matches(Regex("(?i)^\\d+\\s+new\\s+messages?$")) ||
+                    text.matches(Regex("(?i)^\\d+\\s+unread\\s+messages?$"))
+            if (!isGenericCounter) {
+                texts.add(text)
+            } else if (texts.isEmpty()) {
+                texts.add(text)
+            }
+        }
+
+        // 6. EXTRA_SUB_TEXT (sender account or email snippet)
+        val subText = extras.getCharSequence(Notification.EXTRA_SUB_TEXT)?.toString()?.trim()
+        if (!subText.isNullOrBlank()) {
+            if (texts.isEmpty() || subText.contains("@")) {
+                texts.add(subText)
+            }
+        }
+
+        // 7. Fallback fields
         if (texts.isEmpty()) {
-            val ticker = notification.tickerText?.toString()
+            val ticker = notification.tickerText?.toString()?.trim()
             if (!ticker.isNullOrBlank()) texts.add(ticker)
         }
 

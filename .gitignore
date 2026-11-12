@@ -16,6 +16,7 @@ app/build/
 android/gradle-8.7/
 *.apk
 *.aab
+*.jks
 local.properties
 
 # Databases & local state
